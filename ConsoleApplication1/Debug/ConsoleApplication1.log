@@ -1,0 +1,15 @@
+﻿  optimizer.cpp
+D:\optimizer\ConsoleApplication1\analyser.h(92,21): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\Topo_relative.h(91,35): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(128,18): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(130,33): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(193,35): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(230,18): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(232,33): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(512,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(616,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(720,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(824,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(928,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\analyser.h(95): warning C4715: “Refer_table::get_refer_unit”: 不是所有的控件路径都返回值
+  ConsoleApplication1.vcxproj -> D:\optimizer\Debug\ConsoleApplication1.exe
