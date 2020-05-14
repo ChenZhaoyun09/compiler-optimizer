@@ -980,12 +980,12 @@ void process_file(char* destination, char* source) {
 			(topo.container).push_back(instr_x);
 			topo.instr_num++;
 			//printf("%s", instr_x->instr_str);
-			printf("%sfunc_unit:%s   \tcycle:%d \tinput1:%s \tinput2:%s \tinput3:%s \toutput1:%s \toutput2:%s \tr_cycle:%d \tw_cycle:%d\n\n",\
+			//printf("%sfunc_unit:%s   \tcycle:%d \tinput1:%s \tinput2:%s \tinput3:%s \toutput1:%s \toutput2:%s \tr_cycle:%d \tw_cycle:%d\n\n",\
 				instr_x->instr_str, instr_x->func_unit, instr_x->cycle, instr_x->input1, instr_x->input2, \
 				instr_x->input3, instr_x->output1, instr_x->output2, instr_x->r_cycle, instr_x->w_cycle);
-			//topo.fresh_cd_buff();
-			//topo.build_dependency(instr_x);
-			//topo.push_to_cd_buff(instr_x);
+			topo.fresh_cd_buff();
+			topo.build_dependency(instr_x);
+			topo.push_to_cd_buff(instr_x);
 
 			//Instr* x;
 			//printf("reg_written info:\n");
