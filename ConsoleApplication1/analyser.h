@@ -95,23 +95,25 @@ struct Refer_table {
 	}
 }refer_table;
 
-
 struct Instr {
 	char* instr_str;
 	char func_unit[16];
+	char cond[16];
 	char input1[16], input2[16], input3[16];
 	char output1[16], output2[16];
 	int cycle, r_cycle, w_cycle;
 	int indeg, last_fa_end_time;
 	vector<pair<Instr*, int> > chl;
-
+		
 	Instr() {
+		cond[0] = '\0';
 		input1[0] = '\0'; input2[0] = '\0'; input3[0] = '\0';
 		output1[0] = '\0'; output2[0] = '\0';
 		indeg = last_fa_end_time = 0;
 	}
 
 	void init() {
+		cond[0] = '\0';
 		input1[0] = '\0'; input2[0] = '\0'; input3[0] = '\0';
 		output1[0] = '\0'; output2[0] = '\0';
 		indeg = last_fa_end_time = 0;
@@ -179,16 +181,29 @@ struct mem_info_cmp {
 
 void get_first_word(char* destination, char* source) {
 	int i, ii;
-	for (i = 0; source[i] == '\t' || source[i] == '|'; i++);
+	for (i = 0; source[i] == '\t' || source[i] == '|' || source[i] == ' '; i++);
 	for (ii = 0; source[i] != ' ' && source[i] != '\t' && source[i] != '\n'; i++, ii++)
 		destination[ii] = source[i];
 	destination[ii] = '\0';
 }
 
 
-//0: instruction;	1: label;	2: head information;	3: illustration;
+//0: instruction;	1: label;	3: others;
 int sentence_type(char* str, char* sentence) {
 	if (str[0] == ';') {
+		int pos = findchar(sentence, 'c');
+		if (pos != -1) return !strncmp(sentence + pos, "condjump", 8) ? 1 : 3;
+	}
+	else if (str[0] == '.' || str[0] == '\0') {
+		return 3;
+	}
+	else {
+		int flag = findchar(str, ':');
+		return flag != -1 ? 1 : 0;
+	}
+}
+/*
+	if (str[0] == ';' || str[0] == '\0') {
 		int pos = findchar(sentence, 'c');
 		if (pos != -1) return !strncmp(sentence + pos, "condjump", 8) ? 1 : 3;
 		else return 3;
@@ -198,7 +213,7 @@ int sentence_type(char* str, char* sentence) {
 		return flag != -1 ? 1 : 2;
 	return flag != -1 ? 1 : 0;
 }
-
+*/
 
 
 struct Topograph {
@@ -232,14 +247,26 @@ struct Topograph {
 
 		int i, ii;
 		char instr_name[16];
-		for (i = 0; sentence[i] == '\t' || sentence[i] == '|'; i++);
-		for (ii = 0; sentence[i] != ' ' && sentence[i] != '\t'; i++, ii++)
+		// condition register
+		for (i = 0; sentence[i] == '\t' || sentence[i] == '|' || sentence[i] == ' '; i++);
+		if (sentence[i] == '[') {
+			if (sentence[++i] == '!') i++;
+			for (ii = 0; sentence[i] != ']'; ii++, i++)
+				res.cond[ii] = sentence[i];
+			res.cond[ii] = '\0';
+			i++;
+		}
+
+
+		// func unit
+		while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
+		for (ii = 0; sentence[i] != ' ' && sentence[i] != '\t' && sentence[i] != '\n'; i++, ii++)
 			instr_name[ii] = sentence[i];
 		instr_name[ii] = '\0';
 		if ((ii = findchar(instr_name, '.')) != -1) instr_name[ii] = '\0';
 
 
-		// process [Rx] SBR instruction specially!
+/*		// process [Rx] SBR instruction specially!
 		if (instr_name[0] == '[') {
 
 			int iii, len = strlen(instr_name);
@@ -252,82 +279,176 @@ struct Topograph {
 				instr_name[ii] = sentence[i];
 			instr_name[ii] = '\0';
 		}
-
+*/
 
 		Refer_unit refer_unit = refer_table.get_refer_unit(instr_name);
 		strcpy(res.func_unit, refer_unit.func_unit);
 		// if it is an SBR instruction
-		if (strcmp(res.input1, "")) {
+/*		if (strcmp(res.input1, "")) {
 			res.cycle = refer_unit.cycle;
 			res.r_cycle = refer_unit.r_cycle;
 			res.w_cycle = refer_unit.w_cycle;
 			All_Instr[instr_num] = res;
 			return &All_Instr[instr_num];
-		}
+		}*/
 
 
 		if (strcmp(refer_unit.input[0], "")) {
-			i += 2;
-			for (ii = 0; sentence[i] != ':' && sentence[i] != ',' && sentence[i] != '\n'; i++, ii++)
+			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
+			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
 				res.input1[ii] = sentence[i];
+			res.input1[ii] = '\0';
+			int c_flag = findchar(refer_unit.input[0], ':');
+			if (c_flag != -1) {
+				char c = refer_unit.input[0][c_flag+1];
+				int res_flag = findchar(res.input1, ':');
+				if (res_flag == -1) {
+					if (res.input1[0] == 'R' || (res.input1[0] == 'V' && res.input1[1] == 'R')) {
+						res.input1[ii++] = ':';
+						res.input1[ii++] = c;
+						res.input1[ii++] = '\0';
+					}	
+				}
+				else {
+					int tmp_i = 0;
+					for (ii = res_flag+1; ii < strlen(res.input1); ii++) {
+						res.input1[tmp_i++] = res.input1[ii];
+					}
+					res.input1[tmp_i++] = ':';
+					res.input1[tmp_i++] = c;
+					res.input1[tmp_i++] = '\0';
+				}
+			}
+/*
 			char c = refer_unit.input[0][strlen(refer_unit.input[0]) - 1];
 			if ('0' <= c && c <= '9') {
+				int c_flag = findchar(res.input1, ':');
 				res.input1[ii++] = ':';
 				res.input1[ii++] = c;
-			}
-			res.input1[ii] = '\0';
+			}*/
+
 		}
 
 
 		if (strcmp(refer_unit.input[1], "")) {
-			for (; sentence[i] != ','; i++);
-			for (ii = 0, ++i; sentence[i] != ':' && sentence[i] != ',' && sentence[i] != '\n'; i++, ii++)
+			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
+			//for (; sentence[i] != ','; i++);
+			for (ii = 0;  sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
 				res.input2[ii] = sentence[i];
-			char c = refer_unit.input[1][strlen(refer_unit.input[1]) - 1];
-			if ('0' <= c && c <= '9') {
-				res.input2[ii++] = ':';
-				res.input2[ii++] = c;
-			}
 			res.input2[ii] = '\0';
+			int c_flag = findchar(refer_unit.input[1], ':');
+			if (c_flag != -1) {
+				char c = refer_unit.input[1][c_flag + 1];
+				int res_flag = findchar(res.input2, ':');
+				if (res_flag == -1) {
+					if (res.input2[0] == 'R' || (res.input2[0] == 'V' && res.input2[1] == 'R')) {
+						res.input2[ii++] = ':';
+						res.input2[ii++] = c;
+						res.input2[ii++] = '\0';
+					}
+				}
+				else {
+					int tmp_i = 0;
+					for (ii = res_flag + 1; ii < strlen(res.input2); ii++) {
+						res.input2[tmp_i++] = res.input2[ii];
+					}
+					res.input2[tmp_i++] = ':';
+					res.input2[tmp_i++] = c;
+					res.input2[tmp_i++] = '\0';
+				}
+			}
+
 		}
 
 
 		if (strcmp(refer_unit.input[2], "")) {
-			for (; sentence[i] != ','; i++);
-			for (ii = 0, ++i; sentence[i] != ':' && sentence[i] != ',' && sentence[i] != '\n'; i++, ii++)
+			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
+			//for (; sentence[i] != ','; i++);
+			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
 				res.input3[ii] = sentence[i];
-			char c = refer_unit.input[2][strlen(refer_unit.input[2]) - 1];
-			if ('0' <= c && c <= '9') {
-				res.input3[ii++] = ':';
-				res.input3[ii++] = c;
-			}
 			res.input3[ii] = '\0';
+			int c_flag = findchar(refer_unit.input[2], ':');
+			if (c_flag != -1) {
+				char c = refer_unit.input[2][c_flag + 1];
+				int res_flag = findchar(res.input3, ':');
+				if (res_flag == -1) {
+					if (res.input3[0] == 'R' || (res.input3[0] == 'V' && res.input3[1] == 'R')) {
+						res.input3[ii++] = ':';
+						res.input3[ii++] = c;
+						res.input3[ii++] = '\0';
+					}
+				}
+				else {
+					int tmp_i = 0;
+					for (ii = res_flag+1; ii < strlen(res.input3); ii++) {
+						res.input3[tmp_i++] = res.input3[ii];
+					}
+					res.input3[tmp_i++] = ':';
+					res.input3[tmp_i++] = c;
+					res.input3[tmp_i++] = '\0';
+				}
+			}
 		}
 
 
 		if (strcmp(refer_unit.output[0], "")) {
-			for (; sentence[i] != ','; i++);
-			for (ii = 0, ++i; sentence[i] != ':' && sentence[i] != ',' && sentence[i] != '\n'; i++, ii++)
+			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
+			//for (; sentence[i] != ','; i++);
+			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i]!= ' '; i++, ii++)
 				res.output1[ii] = sentence[i];
-			char c = refer_unit.output[0][strlen(refer_unit.output[0]) - 1];
-			if ('0' <= c && c <= '9') {
-				res.output1[ii++] = ':';
-				res.output1[ii++] = c;
-			}
 			res.output1[ii] = '\0';
+			int c_flag = findchar(refer_unit.output[0], ':');
+			if (c_flag != -1) {
+				char c = refer_unit.output[0][c_flag + 1];
+				int res_flag = findchar(res.output1, ':');
+				if (res_flag == -1) {
+					if (res.output1[0] == 'R' || (res.output1[0] == 'V' && res.output1[1] == 'R')) {
+						res.output1[ii++] = ':';
+						res.output1[ii++] = c;
+						res.output1[ii++] = '\0';
+					}
+				}
+				else {
+					int tmp_i = 0;
+					for (ii = res_flag+1; ii < strlen(res.output1); ii++) {
+						res.output1[tmp_i++] = res.output1[ii];
+					}
+					res.output1[tmp_i++] = ':';
+					res.output1[tmp_i++] = c;
+					res.output1[tmp_i++] = '\0';
+				}
+			}
+
 		}
 
 
 		if (strcmp(refer_unit.output[1], "")) {
-			for (; sentence[i] != ','; i++);
-			for (ii = 0, ++i; sentence[i] != ':' && sentence[i] != ',' && sentence[i] != '\n'; i++, ii++)
+			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
+			//for (; sentence[i] != ','; i++);
+			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
 				res.output2[ii] = sentence[i];
-			char c = refer_unit.output[1][strlen(refer_unit.output[1]) - 1];
-			if ('0' <= c && c <= '9') {
-				res.output2[ii++] = ':';
-				res.output2[ii++] = c;
-			}
 			res.output2[ii] = '\0';
+			int c_flag = findchar(refer_unit.output[1], ':');
+			if (c_flag != -1) {
+				char c = refer_unit.output[1][c_flag + 1];
+				int res_flag = findchar(res.output2, ':');
+				if (res_flag == -1) {
+					if (res.output2[0] == 'R' || (res.output2[0] == 'V' && res.output2[1] == 'R')) {
+						res.output2[ii++] = ':';
+						res.output2[ii++] = c;
+						res.output2[ii++] = '\0';
+					}
+				}
+				else {
+					int tmp_i = 0;
+					for (ii = res_flag+1; ii < strlen(res.output2); ii++) {
+						res.output2[tmp_i++] = res.output2[ii];
+					}
+					res.output2[tmp_i++] = ':';
+					res.output2[tmp_i++] = c;
+					res.output2[tmp_i++] = '\0';
+				}
+			}
 		}
 
 		res.cycle = refer_unit.cycle;

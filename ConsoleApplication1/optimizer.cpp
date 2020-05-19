@@ -6,8 +6,8 @@
 using namespace std;
 
 char reference_filename[] = "D:\\program\\instruction.csv";
-char input_file[] = "D:\\program\\matmult\\Debug\\matmult.s";
-char output_file[] = "D:\\program\\matmult\\Debug\\matmult_pro.s";
+char input_file[] = "D:\\program\\test.asm";
+char output_file[] = "D:\\program\\test_pro.asm";
 
 int main()
 {
