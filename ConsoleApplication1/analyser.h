@@ -33,7 +33,7 @@ struct Refer_unit {
 	char func_unit[16];
 	int cycle;
 	char input[3][16];
-	char output[2][16];
+	char output[1][16];
 	int r_cycle, w_cycle;
 };
 
@@ -72,9 +72,6 @@ struct Refer_table {
 				x.output[0][ii] = instr_info[i];
 			x.output[0][ii] = '\0';
 			for (ii = 0, ++i; instr_info[i] != ','; i++, ii++)
-				x.output[1][ii] = instr_info[i];
-			x.output[1][ii] = '\0';
-			for (ii = 0, ++i; instr_info[i] != ','; i++, ii++)
 				buf[ii] = instr_info[i];
 			buf[ii] = '\0';
 			x.r_cycle = atoi(buf);
@@ -100,7 +97,7 @@ struct Instr {
 	char func_unit[16];
 	char cond[16];
 	char input1[16], input2[16], input3[16];
-	char output1[16], output2[16];
+	char output1[16];
 	int cycle, r_cycle, w_cycle;
 	int indeg, last_fa_end_time;
 	vector<pair<Instr*, int> > chl;
@@ -108,14 +105,14 @@ struct Instr {
 	Instr() {
 		cond[0] = '\0';
 		input1[0] = '\0'; input2[0] = '\0'; input3[0] = '\0';
-		output1[0] = '\0'; output2[0] = '\0';
+		output1[0] = '\0';
 		indeg = last_fa_end_time = 0;
 	}
 
 	void init() {
 		cond[0] = '\0';
 		input1[0] = '\0'; input2[0] = '\0'; input3[0] = '\0';
-		output1[0] = '\0'; output2[0] = '\0';
+		output1[0] = '\0';
 		indeg = last_fa_end_time = 0;
 		chl.resize(0);
 	}
@@ -179,12 +176,19 @@ struct mem_info_cmp {
 };
 
 
-void get_first_word(char* destination, char* source) {
-	int i, ii;
-	for (i = 0; source[i] == '\t' || source[i] == '|' || source[i] == ' '; i++);
+int get_first_word(char* destination, char* source) {
+	int i = 0 , ii;
+	int para_flag = 0;
+	//for (i = 0; source[i] == '\t' || source[i] == '|' || source[i] == ' '; i++);
+	while (1) {
+		if (source[i] != '\t' && source[i] != ' ' && source[i] != '|') break;
+		if (source[i] == '|') para_flag = 1; 
+		i++;
+	}
 	for (ii = 0; source[i] != ' ' && source[i] != '\t' && source[i] != '\n'; i++, ii++)
 		destination[ii] = source[i];
 	destination[ii] = '\0';
+	return para_flag;
 }
 
 
@@ -422,34 +426,7 @@ struct Topograph {
 		}
 
 
-		if (strcmp(refer_unit.output[1], "")) {
-			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
-			//for (; sentence[i] != ','; i++);
-			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
-				res.output2[ii] = sentence[i];
-			res.output2[ii] = '\0';
-			int c_flag = findchar(refer_unit.output[1], ':');
-			if (c_flag != -1) {
-				char c = refer_unit.output[1][c_flag + 1];
-				int res_flag = findchar(res.output2, ':');
-				if (res_flag == -1) {
-					if (res.output2[0] == 'R' || (res.output2[0] == 'V' && res.output2[1] == 'R')) {
-						res.output2[ii++] = ':';
-						res.output2[ii++] = c;
-						res.output2[ii++] = '\0';
-					}
-				}
-				else {
-					int tmp_i = 0;
-					for (ii = res_flag+1; ii < strlen(res.output2); ii++) {
-						res.output2[tmp_i++] = res.output2[ii];
-					}
-					res.output2[tmp_i++] = ':';
-					res.output2[tmp_i++] = c;
-					res.output2[tmp_i++] = '\0';
-				}
-			}
-		}
+		
 
 		res.cycle = refer_unit.cycle;
 		res.r_cycle = refer_unit.r_cycle;
