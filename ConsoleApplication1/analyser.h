@@ -194,15 +194,15 @@ int get_first_word(char* destination, char* source) {
 
 //0: instruction;	1: label;	3: others;
 int sentence_type(char* str, char* sentence) {
+	int flag = findchar(str, ':');
 	if (str[0] == ';') {
 		int pos = findchar(sentence, 'c');
 		if (pos != -1) return !strncmp(sentence + pos, "condjump", 8) ? 1 : 3;
 	}
 	else if (str[0] == '.' || str[0] == '\0') {
-		return 3;
+		return flag != -1 ? 1 : 3;
 	}
 	else {
-		int flag = findchar(str, ':');
 		return flag != -1 ? 1 : 0;
 	}
 }
