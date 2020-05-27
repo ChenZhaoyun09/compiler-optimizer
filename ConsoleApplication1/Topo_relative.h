@@ -33,6 +33,13 @@ inline long long stoll(char* str) {
 	}
 }
 
+bool mem_rely(const mem_info& fa, const mem_info& chl) {
+	if (isalpha(chl.OR[0]) || isalpha(fa.OR[0])) return true;
+	else if (!strcmp(fa.AR, chl.AR)) return true;
+	else if (fa.AR_offset == chl.AR_offset) return true;
+	else return false;
+}
+
 void add_num_after_str(char* destination, char* source, int num) {
 	strcpy(destination, source);
 	sprintf(destination + strlen(destination), "%d", num);
@@ -42,113 +49,370 @@ void Topograph::push_to_cd_buff(Instr* x) {
 
 	int i, ii, inum, pos;
 
-	if (!strcmp(x->output1, "")) return;
-	// output1 is a register
-	if (x->output1[0] != '*') {
-		pos = strlen(x->output1);
-		if (x->output1[pos - 2] != ':') {
-			reg_info res(x->output1);
-			this->reg_read[res] = x;
-			cd_Instr cdi(x, this->Timer + x->cycle);
-			(this->cd_buff).push(cdi);
+	//cond field
+	if (strcmp(x->cond, "") && !isdigit(x->cond[0])) {
+		reg_info res(x->cond);
+		this->reg_read[res] = x;
+		Instr* ptr = this->reg_written[res];
+		if (ptr != NULL) {
+			ptr->chl.push_back(make_pair(x, ptr->cycle));
+			x->indeg++;
 		}
-		else {
-			char alpha[8], cnum[8];
-			for (i = 0; isalpha(x->output1[i]); i++)
-				alpha[i] = x->output1[i];
-			alpha[i] = '\0';
-			for (ii = 0; isdigit(x->output1[i]); i++, ii++)
-				cnum[ii] = x->output1[i];
-			cnum[ii] = '\0';
-			inum = atoi(cnum);
+	}
 
-			reg_info res;
-			for (i = x->output1[pos - 1] - '0'; i; i--) {
-				add_num_after_str(res.name, alpha, inum + i - 1);
+	//input1
+	if (strcmp(x->input1, "") && !isdigit(x->input1[0])) {
+		// input1 is a register
+		if (x->input1[0] != '*') {
+			pos = strlen(x->input1);
+			if (x->input1[pos - 2] != ':') {
+				reg_info res(x->input1);
 				this->reg_read[res] = x;
-			}
-			cd_Instr cdi(x, this->Timer + x->cycle);
-			(this->cd_buff).push(cdi);
-			
-		}
-	}
-	// output1 is a memory_unit
-	else {
-
-		// judge AR self_change
-		char AR[8], OR[16];
-		int offset;
-		bool self_change;
-		pos = max(findchar(x->output1, '-'), findchar(x->output1, '+'));
-		if (pos == -1) self_change = false;
-		else if (x->output1[pos + 1] == '+' || x->output1[pos + 1] == '-') self_change = true;
-		else self_change = false;
-
-		// get AR, OR and offset
-		if (pos == -1) {
-			strcpy(AR, x->output1 + 1);
-			reg_info ri_AR(AR);
-			OR[0] = '\0';
-			offset = this->reg_offset[ri_AR];
-		}
-		else if (self_change == true) {
-			if (pos == 1) {
-				i = findchar(x->output1, '[');
-				strncpy(AR, x->output1 + pos + 2, i - pos - 2);
-				AR[i-pos-2] = '\0';
-				ii = findchar(x->output1, ']');
-				strncpy(OR, x->output1 + i + 1, ii - i - 1);
-				OR[ii-i-1] = '\0';
+				Instr* ptr = this->reg_written[res];
+				if (ptr != NULL) {
+					ptr->chl.push_back(make_pair(x, ptr->cycle));
+					x->indeg++;
+				}
 			}
 			else {
-				strncpy(AR, x->output1 + 1, pos - 1);
-				AR[pos-1] = '\0';
-				ii = findchar(x->output1, ']');
-				strncpy(OR, x->output1 + pos + 3, ii - pos - 3);
-				OR[ii-pos-3] = '\0';
+				char alpha[8], cnum[8];
+				for (i = 0; isalpha(x->input1[i]); i++)
+					alpha[i] = x->input1[i];
+				alpha[i] = '\0';
+				for (ii = 0; isdigit(x->input1[i]); i++, ii++)
+					cnum[ii] = x->input1[i];
+				cnum[ii] = '\0';
+				inum = atoi(cnum);
+
+				reg_info res;
+				for (i = x->input1[pos - 1] - '0'; i; i--) {
+					add_num_after_str(res.name, alpha, inum + i - 1);
+					this->reg_read[res] = x;
+					Instr* ptr = this->reg_written[res];
+					if (ptr != NULL) {
+						ptr->chl.push_back(make_pair(x, ptr->cycle));
+						x->indeg++;
+					}
+				}
 			}
 		}
+		// input1 is a memory_unit
 		else {
-			if (pos == 1) {
-				i = findchar(x->output1, '[');
-				strncpy(AR, x->output1 + pos + 1, i - pos - 1);
-				AR[i-pos-1] = '\0';
-				ii = findchar(x->output1, ']');
-				strncpy(OR, x->output1 + i + 1, ii - i - 1);
-				OR[ii-i-1] = '\0';
+			// judge AR self_change
+			char AR[8], OR[16];
+			int offset;
+			bool self_change;
+			pos = max(findchar(x->input1, '-'), findchar(x->input1, '+'));
+			if (pos == -1) self_change = false;
+			else if (x->input1[pos + 1] == '+' || x->input1[pos + 1] == '-') self_change = true;
+			else self_change = false;
+
+			// get AR, OR and offset
+			if (pos == -1) {
+				strcpy(AR, x->input1 + 1);
+				reg_info ri_AR(AR);
+				OR[0] = '\0';
+				offset = this->reg_offset[ri_AR];
+			}
+			else if (self_change == true) {
+				if (pos == 1) {
+					i = findchar(x->input1, '[');
+					strncpy(AR, x->input1 + pos + 2, i - pos - 2);
+					AR[i - pos - 2] = '\0';
+					ii = findchar(x->input1, ']');
+					strncpy(OR, x->input1 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
+				}
+				else {
+					strncpy(AR, x->input1 + 1, pos - 1);
+					AR[pos - 1] = '\0';
+					ii = findchar(x->input1, ']');
+					strncpy(OR, x->input1 + pos + 3, ii - pos - 3);
+					OR[ii - pos - 3] = '\0';
+				}
 			}
 			else {
-				strncpy(AR, x->output1 + 1, pos - 1);
-				AR[pos-1] = '\0';
-				ii = findchar(x->output1, ']');
-				strncpy(OR, x->output1 + pos + 2, ii - pos - 2);
-				OR[ii-pos-2] = '\0';
+				if (pos == 1) {
+					i = findchar(x->input1, '[');
+					strncpy(AR, x->input1 + pos + 1, i - pos - 1);
+					AR[i - pos - 1] = '\0';
+					ii = findchar(x->input1, ']');
+					strncpy(OR, x->input1 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
+				}
+				else {
+					strncpy(AR, x->input1 + 1, pos - 1);
+					AR[pos - 1] = '\0';
+					ii = findchar(x->input1, ']');
+					strncpy(OR, x->input1 + pos + 2, ii - pos - 2);
+					OR[ii - pos - 2] = '\0';
+				}
+			}
+			if (isdigit(OR[0])) {
+				offset = stoll(OR);
+				reg_info ri_AR(AR);
+				inum = this->reg_offset[ri_AR];
+				offset += x->input1[1] == '+' ? inum : -inum;
+			}
+			else offset = 0;
+
+			// fresh reg_offset
+			if (self_change == true)
+				this->reg_offset[reg_info(AR)] = offset;
+
+			// pack this Instr
+			mem_info res(AR, OR, offset);
+			this->mem_read[res] = x;
+			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_written.begin(); it != this->mem_written.end();) {
+				if (it->second != NULL && mem_rely(it->first, res)) {
+					((it->second)->chl).push_back(make_pair(x, it->second->cycle));
+					(this->mem_written).erase(it++);
+				}
+				else {
+					it++;
+				}
 			}
 		}
-		if (isdigit(OR[0])) {
-			offset = stoll(OR);
-			reg_info ri_AR(AR);
-			inum = this->reg_offset[ri_AR];
-			offset += x->output1[1] == '+' ? inum : -inum;
-		}
-		else offset = 0;
-
-		// fresh reg_offset
-		if (self_change == true) 
-			this->reg_offset[reg_info(AR)] = offset;
-
-		// pack this Instr
-		mem_info res(AR, OR, offset);
-		this->mem_read[res] = x;
-		cd_Instr cdi(x, this->Timer + x->cycle, offset);
-		this->cd_buff.push(cdi);
 	}
+
+	//input2
+	if (strcmp(x->input2, "") && !isdigit(x->input2[0])) {
+		// input2 is a register
+		if (x->input2[0] != '*') {
+			pos = strlen(x->input2);
+			if (x->input2[pos - 2] != ':') {
+				reg_info res(x->input2);
+				this->reg_read[res] = x;
+				Instr* ptr = this->reg_written[res];
+				if (ptr != NULL) {
+					ptr->chl.push_back(make_pair(x, ptr->cycle));
+					x->indeg++;
+				}
+			}
+			else {
+				char alpha[8], cnum[8];
+				for (i = 0; isalpha(x->input2[i]); i++)
+					alpha[i] = x->input2[i];
+				alpha[i] = '\0';
+				for (ii = 0; isdigit(x->input2[i]); i++, ii++)
+					cnum[ii] = x->input2[i];
+				cnum[ii] = '\0';
+				inum = atoi(cnum);
+
+				reg_info res;
+				for (i = x->input2[pos - 1] - '0'; i; i--) {
+					add_num_after_str(res.name, alpha, inum + i - 1);
+					this->reg_read[res] = x;
+					Instr* ptr = this->reg_written[res];
+					if (ptr != NULL) {
+						ptr->chl.push_back(make_pair(x, ptr->cycle));
+						x->indeg++;
+					}
+				}
+			}
+		}
+		// input2 is a memory_unit
+		else {
+			// judge AR self_change
+			char AR[8], OR[16];
+			int offset;
+			bool self_change;
+			pos = max(findchar(x->input2, '-'), findchar(x->input2, '+'));
+			if (pos == -1) self_change = false;
+			else if (x->input2[pos + 1] == '+' || x->input2[pos + 1] == '-') self_change = true;
+			else self_change = false;
+
+			// get AR, OR and offset
+			if (pos == -1) {
+				strcpy(AR, x->input2 + 1);
+				reg_info ri_AR(AR);
+				OR[0] = '\0';
+				offset = this->reg_offset[ri_AR];
+			}
+			else if (self_change == true) {
+				if (pos == 1) {
+					i = findchar(x->input2, '[');
+					strncpy(AR, x->input2 + pos + 2, i - pos - 2);
+					AR[i - pos - 2] = '\0';
+					ii = findchar(x->input2, ']');
+					strncpy(OR, x->input2 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
+				}
+				else {
+					strncpy(AR, x->input2 + 1, pos - 1);
+					AR[pos - 1] = '\0';
+					ii = findchar(x->input2, ']');
+					strncpy(OR, x->input2 + pos + 3, ii - pos - 3);
+					OR[ii - pos - 3] = '\0';
+				}
+			}
+			else {
+				if (pos == 1) {
+					i = findchar(x->input2, '[');
+					strncpy(AR, x->input2 + pos + 1, i - pos - 1);
+					AR[i - pos - 1] = '\0';
+					ii = findchar(x->input2, ']');
+					strncpy(OR, x->input2 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
+				}
+				else {
+					strncpy(AR, x->input2 + 1, pos - 1);
+					AR[pos - 1] = '\0';
+					ii = findchar(x->input2, ']');
+					strncpy(OR, x->input2 + pos + 2, ii - pos - 2);
+					OR[ii - pos - 2] = '\0';
+				}
+			}
+			if (isdigit(OR[0])) {
+				offset = stoll(OR);
+				reg_info ri_AR(AR);
+				inum = this->reg_offset[ri_AR];
+				offset += x->input2[1] == '+' ? inum : -inum;
+			}
+			else offset = 0;
+
+			// fresh reg_offset
+			if (self_change == true)
+				this->reg_offset[reg_info(AR)] = offset;
+
+			// pack this Instr
+			mem_info res(AR, OR, offset);
+			this->mem_read[res] = x;
+			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_written.begin(); it != this->mem_written.end();) {
+				if (it->second != NULL && mem_rely(it->first, res)) {
+					((it->second)->chl).push_back(make_pair(x, it->second->cycle));
+					(this->mem_written).erase(it++);
+				}
+				else {
+					it++;
+				}
+			}
+		}
+	}
+
+
+	//input3
+	if (strcmp(x->input3, "") && !isdigit(x->input3[0])) {
+		// input3 is a register
+		if (x->input3[0] != '*') {
+			pos = strlen(x->input3);
+			if (x->input3[pos - 2] != ':') {
+				reg_info res(x->input3);
+				this->reg_read[res] = x;
+				Instr* ptr = this->reg_written[res];
+				if (ptr != NULL) {
+					ptr->chl.push_back(make_pair(x, ptr->cycle));
+					x->indeg++;
+				}
+			}
+			else {
+				char alpha[8], cnum[8];
+				for (i = 0; isalpha(x->input3[i]); i++)
+					alpha[i] = x->input3[i];
+				alpha[i] = '\0';
+				for (ii = 0; isdigit(x->input3[i]); i++, ii++)
+					cnum[ii] = x->input3[i];
+				cnum[ii] = '\0';
+				inum = atoi(cnum);
+
+				reg_info res;
+				for (i = x->input3[pos - 1] - '0'; i; i--) {
+					add_num_after_str(res.name, alpha, inum + i - 1);
+					this->reg_read[res] = x;
+					Instr* ptr = this->reg_written[res];
+					if (ptr != NULL) {
+						ptr->chl.push_back(make_pair(x, ptr->cycle));
+						x->indeg++;
+					}
+				}
+			}
+		}
+		// input3 is a memory_unit
+		else {
+			// judge AR self_change
+			char AR[8], OR[16];
+			int offset;
+			bool self_change;
+			pos = max(findchar(x->input3, '-'), findchar(x->input3, '+'));
+			if (pos == -1) self_change = false;
+			else if (x->input3[pos + 1] == '+' || x->input3[pos + 1] == '-') self_change = true;
+			else self_change = false;
+
+			// get AR, OR and offset
+			if (pos == -1) {
+				strcpy(AR, x->input3 + 1);
+				reg_info ri_AR(AR);
+				OR[0] = '\0';
+				offset = this->reg_offset[ri_AR];
+			}
+			else if (self_change == true) {
+				if (pos == 1) {
+					i = findchar(x->input3, '[');
+					strncpy(AR, x->input3 + pos + 2, i - pos - 2);
+					AR[i - pos - 2] = '\0';
+					ii = findchar(x->input3, ']');
+					strncpy(OR, x->input3 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
+				}
+				else {
+					strncpy(AR, x->input3 + 1, pos - 1);
+					AR[pos - 1] = '\0';
+					ii = findchar(x->input3, ']');
+					strncpy(OR, x->input3 + pos + 3, ii - pos - 3);
+					OR[ii - pos - 3] = '\0';
+				}
+			}
+			else {
+				if (pos == 1) {
+					i = findchar(x->input3, '[');
+					strncpy(AR, x->input3 + pos + 1, i - pos - 1);
+					AR[i - pos - 1] = '\0';
+					ii = findchar(x->input3, ']');
+					strncpy(OR, x->input3 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
+				}
+				else {
+					strncpy(AR, x->input3 + 1, pos - 1);
+					AR[pos - 1] = '\0';
+					ii = findchar(x->input3, ']');
+					strncpy(OR, x->input3 + pos + 2, ii - pos - 2);
+					OR[ii - pos - 2] = '\0';
+				}
+			}
+			if (isdigit(OR[0])) {
+				offset = stoll(OR);
+				reg_info ri_AR(AR);
+				inum = this->reg_offset[ri_AR];
+				offset += x->input3[1] == '+' ? inum : -inum;
+			}
+			else offset = 0;
+
+			// fresh reg_offset
+			if (self_change == true)
+				this->reg_offset[reg_info(AR)] = offset;
+
+			// pack this Instr
+			mem_info res(AR, OR, offset);
+			this->mem_read[res] = x;
+			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_written.begin(); it != this->mem_written.end();) {
+				if (it->second != NULL && mem_rely(it->first, res)) {
+					((it->second)->chl).push_back(make_pair(x, it->second->cycle));
+					(this->mem_written).erase(it++);
+				}
+				else {
+					it++;
+				}
+			}
+		}
+	}
+
+	if (!strcmp(x->output1, "")) return;
+	cd_Instr cdi(x, this->Timer + x->cycle);
+	this->cd_buff.push(cdi);
 }
 
+
 void Topograph::fresh_cd_buff() {
-
-	//this->Timer++; // Timer start from 1
-
 	int i, ii, inum, len;
 	while (!(this->cd_buff).empty() && ((this->cd_buff).top()).counter <= (this->Timer)) {
 		Instr* tmp = (cd_buff.top()).instr_p;
@@ -160,9 +424,20 @@ void Topograph::fresh_cd_buff() {
 			len = strlen(tmp->output1);
 			if (tmp->output1[len - 2] != ':') {
 				reg_info res(tmp->output1);
+				
+				Instr* ptr = this->reg_written[res];
+				if (ptr != NULL) {
+					ptr->chl.push_back(make_pair(tmp, ptr->cycle - tmp->cycle + tmp->w_cycle));
+					tmp->indeg++;
+				}
+				ptr = this->reg_read[res];
+				if (ptr != NULL) {
+					ptr->chl.push_back(make_pair(tmp, ptr->r_cycle - tmp->cycle + tmp->w_cycle));
+					tmp->indeg++;
+				}
 				this->reg_written[res] = tmp;
-				this->reg_read[res] = NULL;
 			}
+
 			else {
 				char alpha[8], cnum[8];
 				for (i = 0; isalpha(tmp->output1[i]); i++)
@@ -176,57 +451,95 @@ void Topograph::fresh_cd_buff() {
 				reg_info res;
 				for (i = tmp->output1[len - 1] - '0'; i; i--) {
 					add_num_after_str(res.name, alpha, inum+i-1);
+					Instr* ptr = this->reg_written[res];
+					if (ptr != NULL) {
+						ptr->chl.push_back(make_pair(tmp, ptr->cycle - tmp->cycle + tmp->w_cycle));
+						tmp->indeg++;
+					}
+					ptr = this->reg_read[res];
+					if (ptr != NULL) {
+						ptr->chl.push_back(make_pair(tmp, ptr->r_cycle - tmp->cycle + tmp->w_cycle));
+						tmp->indeg++;
+					}
 					this->reg_written[res] = tmp;
-					this->reg_read[res] = NULL;
 				}
 			}
 		}
 		else {
 			char AR[8], OR[16];
-			if (isalpha(tmp->output1[1])) {
-				int self_change;
-				if ((self_change = findchar(tmp->output1, '+')) != -1 || (self_change = findchar(tmp->output1, '-')) != -1) {
-					strncpy(AR, tmp->output1 + 1, self_change - 1);
-					AR[self_change-1] = '\0';
+			long long offset;
+			bool self_change;
+			len = max(findchar(tmp->output1, '-'), findchar(tmp->output1, '+'));
+			if (len == -1) self_change = false;
+			else if (tmp->output1[len + 1] == '+' || tmp->output1[len + 1] == '-') self_change = true;
+			else self_change = false;
 
-					if (isdigit(tmp->output1[self_change + 3])) {
-						mem_info res(AR, NULL, AR_offset);
-						this->mem_written[res] = tmp;
-						this->mem_read[res] = NULL;
-					}
-					else {
-						for (ii = 0, i = self_change + 3; isaord(tmp->output1[i]); i++, ii++)
-							OR[ii] = tmp->output1[i];
-						OR[ii] = '\0';
-						mem_info res(AR, OR, 0);
-						this->mem_written[res] = tmp;
-						this->mem_read[res] = NULL;
-					}
+			// get AR, OR and offset
+			if (len == -1) {
+				strcpy(AR, tmp->output1 + 1);
+				reg_info ri_AR(AR);
+				OR[0] = '\0';
+				offset = this->reg_offset[ri_AR];
+			}
+			else if (self_change == true) {
+				if (len == 1) {
+					i = findchar(tmp->output1, '[');
+					strncpy(AR, tmp->output1 + len + 2, i - len - 2);
+					AR[i - len - 2] = '\0';
+					ii = findchar(tmp->output1, ']');
+					strncpy(OR, tmp->output1 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
 				}
 				else {
-					strcpy(AR, tmp->output1 + 1);
-					mem_info res(AR, NULL, AR_offset);
-					this->mem_written[res] = tmp;
-					this->mem_read[res] = NULL;
+					strncpy(AR, tmp->output1 + 1, len - 1);
+					AR[len - 1] = '\0';
+					ii = findchar(tmp->output1, ']');
+					strncpy(OR, tmp->output1 + len + 3, ii - len - 3);
+					OR[ii - len - 3] = '\0';
 				}
 			}
-			else{
-				i = isalpha(tmp->output1[2])? 2 : 3;
-				for (ii = 0; isaord(tmp->output1[i]); i++, ii++)
-					AR[ii] = tmp->output1[i];
-				AR[ii] = '\0';
-				if (isdigit(tmp->output1[++i])) {
-					mem_info res(AR, NULL, AR_offset);
-					this->mem_written[res] = tmp;
-					this->mem_read[res] = NULL;
+			else {
+				if (len == 1) {
+					i = findchar(tmp->output1, '[');
+					strncpy(AR, tmp->output1 + len + 1, i - len - 1);
+					AR[i - len - 1] = '\0';
+					ii = findchar(tmp->output1, ']');
+					strncpy(OR, tmp->output1 + i + 1, ii - i - 1);
+					OR[ii - i - 1] = '\0';
 				}
 				else {
-					for (ii = 0; isaord(tmp->output1[i]); i++, ii++)
-						OR[ii] = tmp->output1[i];
-					OR[ii] = '\0';
-					mem_info res(AR, OR, 0);
-					this->mem_written[res] = tmp;
-					this->mem_read[res] = NULL;
+					strncpy(AR, tmp->output1 + 1, len - 1);
+					AR[len - 1] = '\0';
+					ii = findchar(tmp->output1, ']');
+					strncpy(OR, tmp->output1 + len + 2, ii - len - 2);
+					OR[ii - len - 2] = '\0';
+				}
+			}
+			if (isdigit(OR[0])) {
+				offset = stoll(OR);
+				reg_info ri_AR(AR);
+				inum = this->reg_offset[ri_AR];
+				offset += tmp->output1[1] == '+' ? inum : -inum;
+			}
+			else offset = 0;
+
+			mem_info this_mem(AR, OR, offset);
+			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_read.begin(); it != this->mem_read.end();) {
+				if (it->second != NULL && mem_rely(it->first, this_mem)) {
+					((it->second)->chl).push_back(make_pair(tmp, it->second->r_cycle - tmp->cycle + tmp->w_cycle));
+					(this->mem_read).erase(it++);
+				}
+				else {
+					it++;
+				}
+			}
+			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_written.begin(); it != this->mem_written.end();) {
+				if (it->second != NULL && mem_rely(it->first, this_mem)) {
+					((it->second)->chl).push_back(make_pair(tmp, it->second->cycle - tmp->cycle + tmp->w_cycle));
+					(this->mem_written).erase(it++);
+				}
+				else {
+					it++;
 				}
 			}
 		}
@@ -234,17 +547,23 @@ void Topograph::fresh_cd_buff() {
 }
 
 
-bool mem_rely(const mem_info& fa,const mem_info& chl) {
-	if (isalpha(chl.OR[0]) || isalpha(fa.OR[0])) return true;
-	else if (fa.AR_offset == chl.AR_offset) return true;
-	else return false;
-}
 
+/*
 void Topograph::build_dependency(Instr* x) {
 	int i, ii, inum, len;
 	long long offset;
 	char alpha[8], cnum[8], AR[8], OR[16];
-
+	
+	//cond field
+	if (strcmp(x->cond, "") && !isdigit(x->cond[0])) {
+		reg_info ri(x->cond);
+		Instr* ptr = this->reg_written[ri];
+		if (ptr != NULL) {
+			ptr->chl.push_back(make_pair(x, ptr->cycle));
+			x->indeg++;
+		}
+	}
+	
 	if (strcmp(x->input1, "") && !isdigit(x->input1[0])) {
 		// input1 is a register
 		if (x->input1[0] != '*') {
@@ -564,7 +883,7 @@ void Topograph::build_dependency(Instr* x) {
 			// single register
 			if (x->output1[len - 2] != ':') {
 				reg_info ri(x->output1);
-				Instr* ptr = this->reg_read[ri];
+				Instr* ptr = this->buff_reg_written[ri];
 				if (ptr != NULL) {
 					x->chl.push_back(make_pair(ptr, -(ptr->cycle)));
 					ptr->indeg++;
@@ -582,7 +901,7 @@ void Topograph::build_dependency(Instr* x) {
 				for (i = x->output1[len - 1] - '0'; i; i--) {
 					add_num_after_str(OR, alpha, inum + i - 1);
 					reg_info ri(OR);
-					Instr* ptr = this->reg_read[ri];
+					Instr* ptr = this->buff_reg_written[ri];
 					if (ptr != NULL) {
 						x->chl.push_back(make_pair(ptr, -(ptr->cycle)));
 						ptr->indeg++;
@@ -660,7 +979,7 @@ void Topograph::build_dependency(Instr* x) {
 		}
 	}
 }
-
+*/
 
 void process_file(char* destination, char* source) {
 	FILE *fpin, *fpout;
@@ -698,11 +1017,12 @@ void process_file(char* destination, char* source) {
 			(topo.container).push_back(instr_x);
 			topo.instr_num++;
 			if (!para_flag) topo.Timer++;
+			if (!strcmp(buf, "SNOP")) topo.Timer += instr_x->input1[0] - '0';
 			//printf("%s \t type: %d \tfunc_unit:%s   \tcycle:%d \tcond:%s \tinput1:%s \tinput2:%s \tinput3:%s \toutput1:%s \tr_cycle:%d \tw_cycle:%d\n\n",\
 				instr_x->instr_str, st, instr_x->func_unit, instr_x->cycle, instr_x->cond, instr_x->input1, instr_x->input2, \
 				instr_x->input3, instr_x->output1, instr_x->r_cycle, instr_x->w_cycle);
 			topo.fresh_cd_buff();
-			topo.build_dependency(instr_x);
+			//topo.build_dependency(instr_x);
 			topo.push_to_cd_buff(instr_x);
 
 			//Instr* x;

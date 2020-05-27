@@ -4,15 +4,18 @@ D:\optimizer\ConsoleApplication1\analyser.h(318,31): warning C4018: “<”: 有
 D:\optimizer\ConsoleApplication1\analyser.h(356,33): warning C4018: “<”: 有符号/无符号不匹配
 D:\optimizer\ConsoleApplication1\analyser.h(387,31): warning C4018: “<”: 有符号/无符号不匹配
 D:\optimizer\ConsoleApplication1\analyser.h(417,31): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\Topo_relative.h(92,35): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(129,18): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(131,33): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(333,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(437,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(541,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(645,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(702,1): warning C4010: 单行注释包含行继续符
-D:\optimizer\ConsoleApplication1\Topo_relative.h(703,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\Topo_relative.h(115,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(152,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(154,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(230,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(267,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(269,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(346,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(383,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(385,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(521,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(1022,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\Topo_relative.h(1023,1): warning C4010: 单行注释包含行继续符
 D:\optimizer\ConsoleApplication1\analyser.h(208): warning C4715: “sentence_type”: 不是所有的控件路径都返回值
 D:\optimizer\ConsoleApplication1\analyser.h(92): warning C4715: “Refer_table::get_refer_unit”: 不是所有的控件路径都返回值
   ConsoleApplication1.vcxproj -> D:\optimizer\Debug\ConsoleApplication1.exe

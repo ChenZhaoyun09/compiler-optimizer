@@ -225,8 +225,8 @@ struct Topograph {
 	Instr All_Instr[INSTR_MAX_SIZE]; // store all instr
 	vector<Instr*> container; // store pointers of all Instr
 	priority_queue<cd_Instr> cd_buff;
-	unordered_map<reg_info,Instr*,reg_info_cmp> reg_written, reg_read;
-	map<mem_info,Instr*,mem_info_cmp> mem_written, mem_read;
+	unordered_map<reg_info,Instr*,reg_info_cmp> reg_written, reg_read, buff_reg_written;
+	map<mem_info,Instr*,mem_info_cmp> mem_written, mem_read, buff_mem_written;
 	unordered_map<reg_info, long long, reg_info_cmp> reg_offset;
 
 
