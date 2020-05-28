@@ -12,8 +12,8 @@ char output_file[] = "D:\\program\\test_pro.asm";
 int main()
 {
     refer_table.load_table(reference_filename);
-    //load_func_table();
-    process_file(output_file, input_file);
+    load_func_table();
+    process_file(output_file, input_file, &(Topograph::reschedule));
     return 0;
 }
 

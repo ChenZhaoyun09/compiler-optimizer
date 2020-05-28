@@ -52,9 +52,21 @@ void Topograph::push_to_cd_buff(Instr* x) {
 	//cond field
 	if (strcmp(x->cond, "") && !isdigit(x->cond[0])) {
 		reg_info res(x->cond);
-		this->reg_read[res] = x;
+		//this->reg_read[res] = x;
 		Instr* ptr = this->reg_written[res];
-		if (ptr != NULL) {
+		if (ptr == NULL) {
+			Instr vptr;
+			vptr.init();
+			vptr.instr_str = (char*)malloc(1);
+			vptr.instr_str[0] = '\0';
+			vptr.chl.push_back(make_pair(x, vptr.cycle));
+			x->indeg++;
+			this->All_Instr[this->instr_num] = vptr;
+			(this->container).push_back(&this->All_Instr[this->instr_num]);
+			this->reg_written[res] = &this->All_Instr[this->instr_num];
+			this->instr_num++;
+		}
+		else {
 			ptr->chl.push_back(make_pair(x, ptr->cycle));
 			x->indeg++;
 		}
@@ -67,9 +79,21 @@ void Topograph::push_to_cd_buff(Instr* x) {
 			pos = strlen(x->input1);
 			if (x->input1[pos - 2] != ':') {
 				reg_info res(x->input1);
-				this->reg_read[res] = x;
+				//this->reg_read[res] = x;
 				Instr* ptr = this->reg_written[res];
-				if (ptr != NULL) {
+				if (ptr == NULL) {
+					Instr vptr;
+					vptr.init();
+					vptr.instr_str = (char*)malloc(1);
+					vptr.instr_str[0] = '\0';
+					vptr.chl.push_back(make_pair(x, vptr.cycle));
+					x->indeg++;
+					this->All_Instr[this->instr_num] = vptr;
+					(this->container).push_back(&this->All_Instr[this->instr_num]);
+					this->reg_written[res] = &this->All_Instr[this->instr_num];
+					this->instr_num++;
+				}
+				else {
 					ptr->chl.push_back(make_pair(x, ptr->cycle));
 					x->indeg++;
 				}
@@ -87,9 +111,21 @@ void Topograph::push_to_cd_buff(Instr* x) {
 				reg_info res;
 				for (i = x->input1[pos - 1] - '0'; i; i--) {
 					add_num_after_str(res.name, alpha, inum + i - 1);
-					this->reg_read[res] = x;
+					//this->reg_read[res] = x;
 					Instr* ptr = this->reg_written[res];
-					if (ptr != NULL) {
+					if (ptr == NULL) {
+						Instr vptr;
+						vptr.init();
+						vptr.instr_str = (char*)malloc(1);
+						vptr.instr_str[0] = '\0';
+						vptr.chl.push_back(make_pair(x, vptr.cycle));
+						x->indeg++;
+						this->All_Instr[this->instr_num] = vptr;
+						(this->container).push_back(&this->All_Instr[this->instr_num]);
+						this->reg_written[res] = &this->All_Instr[this->instr_num];
+						this->instr_num++;
+					}
+					else {
 						ptr->chl.push_back(make_pair(x, ptr->cycle));
 						x->indeg++;
 					}
@@ -164,9 +200,11 @@ void Topograph::push_to_cd_buff(Instr* x) {
 			mem_info res(AR, OR, offset);
 			this->mem_read[res] = x;
 			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_written.begin(); it != this->mem_written.end();) {
-				if (it->second != NULL && mem_rely(it->first, res)) {
+				if (it->second != NULL && mem_rely(it->first, res)) {	
 					((it->second)->chl).push_back(make_pair(x, it->second->cycle));
-					(this->mem_written).erase(it++);
+					x->indeg++;
+					it++;
+					//(this->mem_written).erase(it++);
 				}
 				else {
 					it++;
@@ -182,9 +220,21 @@ void Topograph::push_to_cd_buff(Instr* x) {
 			pos = strlen(x->input2);
 			if (x->input2[pos - 2] != ':') {
 				reg_info res(x->input2);
-				this->reg_read[res] = x;
+				//this->reg_read[res] = x;
 				Instr* ptr = this->reg_written[res];
-				if (ptr != NULL) {
+				if (ptr == NULL) {
+					Instr vptr;
+					vptr.init();
+					vptr.instr_str = (char*)malloc(1);
+					vptr.instr_str[0] = '\0';
+					vptr.chl.push_back(make_pair(x, vptr.cycle));
+					x->indeg++;
+					this->All_Instr[this->instr_num] = vptr;
+					(this->container).push_back(&this->All_Instr[this->instr_num]);
+					this->reg_written[res] = &this->All_Instr[this->instr_num];
+					this->instr_num++;
+				}
+				else {
 					ptr->chl.push_back(make_pair(x, ptr->cycle));
 					x->indeg++;
 				}
@@ -202,9 +252,21 @@ void Topograph::push_to_cd_buff(Instr* x) {
 				reg_info res;
 				for (i = x->input2[pos - 1] - '0'; i; i--) {
 					add_num_after_str(res.name, alpha, inum + i - 1);
-					this->reg_read[res] = x;
+					//this->reg_read[res] = x;
 					Instr* ptr = this->reg_written[res];
-					if (ptr != NULL) {
+					if (ptr == NULL) {
+						Instr vptr;
+						vptr.init();
+						vptr.instr_str = (char*)malloc(1);
+						vptr.instr_str[0] = '\0';
+						vptr.chl.push_back(make_pair(x, vptr.cycle));
+						x->indeg++;
+						this->All_Instr[this->instr_num] = vptr;
+						(this->container).push_back(&this->All_Instr[this->instr_num]);
+						this->reg_written[res] = &this->All_Instr[this->instr_num];
+						this->instr_num++;
+					}
+					else {
 						ptr->chl.push_back(make_pair(x, ptr->cycle));
 						x->indeg++;
 					}
@@ -281,7 +343,9 @@ void Topograph::push_to_cd_buff(Instr* x) {
 			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_written.begin(); it != this->mem_written.end();) {
 				if (it->second != NULL && mem_rely(it->first, res)) {
 					((it->second)->chl).push_back(make_pair(x, it->second->cycle));
-					(this->mem_written).erase(it++);
+					//(this->mem_written).erase(it++);
+					x->indeg++;
+					it++;
 				}
 				else {
 					it++;
@@ -298,9 +362,21 @@ void Topograph::push_to_cd_buff(Instr* x) {
 			pos = strlen(x->input3);
 			if (x->input3[pos - 2] != ':') {
 				reg_info res(x->input3);
-				this->reg_read[res] = x;
+				//this->reg_read[res] = x;
 				Instr* ptr = this->reg_written[res];
-				if (ptr != NULL) {
+				if (ptr == NULL) {
+					Instr vptr;
+					vptr.init();
+					vptr.instr_str = (char*)malloc(1);
+					vptr.instr_str[0] = '\0';
+					vptr.chl.push_back(make_pair(x, vptr.cycle));
+					x->indeg++;
+					this->All_Instr[this->instr_num] = vptr;
+					(this->container).push_back(&this->All_Instr[this->instr_num]);
+					this->reg_written[res] = &this->All_Instr[this->instr_num];
+					this->instr_num++;
+				}
+				else {
 					ptr->chl.push_back(make_pair(x, ptr->cycle));
 					x->indeg++;
 				}
@@ -318,9 +394,21 @@ void Topograph::push_to_cd_buff(Instr* x) {
 				reg_info res;
 				for (i = x->input3[pos - 1] - '0'; i; i--) {
 					add_num_after_str(res.name, alpha, inum + i - 1);
-					this->reg_read[res] = x;
+					//this->reg_read[res] = x;
 					Instr* ptr = this->reg_written[res];
-					if (ptr != NULL) {
+					if (ptr == NULL) {
+						Instr vptr;
+						vptr.init();
+						vptr.instr_str = (char*)malloc(1);
+						vptr.instr_str[0] = '\0';
+						vptr.chl.push_back(make_pair(x, vptr.cycle));
+						x->indeg++;
+						this->All_Instr[this->instr_num] = vptr;
+						(this->container).push_back(&this->All_Instr[this->instr_num]);
+						this->reg_written[res] = &this->All_Instr[this->instr_num];
+						this->instr_num++;
+					}
+					else {
 						ptr->chl.push_back(make_pair(x, ptr->cycle));
 						x->indeg++;
 					}
@@ -397,7 +485,9 @@ void Topograph::push_to_cd_buff(Instr* x) {
 			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_written.begin(); it != this->mem_written.end();) {
 				if (it->second != NULL && mem_rely(it->first, res)) {
 					((it->second)->chl).push_back(make_pair(x, it->second->cycle));
-					(this->mem_written).erase(it++);
+					//(this->mem_written).erase(it++);
+					x->indeg++;
+					it++;
 				}
 				else {
 					it++;
@@ -429,12 +519,20 @@ void Topograph::fresh_cd_buff() {
 				if (ptr != NULL) {
 					ptr->chl.push_back(make_pair(tmp, ptr->cycle - tmp->cycle + tmp->w_cycle));
 					tmp->indeg++;
+					
+					for (i = 0; i < (ptr->chl).size(); i++) {
+						Instr* child = (ptr->chl[i]).first;
+						if (tmp != child) {
+							child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle));
+							tmp->indeg++;
+						}
+					}
 				}
-				ptr = this->reg_read[res];
+				/*ptr = this->reg_read[res];
 				if (ptr != NULL) {
 					ptr->chl.push_back(make_pair(tmp, ptr->r_cycle - tmp->cycle + tmp->w_cycle));
 					tmp->indeg++;
-				}
+				}*/
 				this->reg_written[res] = tmp;
 			}
 
@@ -455,11 +553,14 @@ void Topograph::fresh_cd_buff() {
 					if (ptr != NULL) {
 						ptr->chl.push_back(make_pair(tmp, ptr->cycle - tmp->cycle + tmp->w_cycle));
 						tmp->indeg++;
-					}
-					ptr = this->reg_read[res];
-					if (ptr != NULL) {
-						ptr->chl.push_back(make_pair(tmp, ptr->r_cycle - tmp->cycle + tmp->w_cycle));
-						tmp->indeg++;
+					
+						for (i = 0; i < (ptr->chl).size(); i++) {
+							Instr* child = (ptr->chl[i]).first;
+							if (tmp != child) {
+								child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle));
+								tmp->indeg++;
+							}
+						}
 					}
 					this->reg_written[res] = tmp;
 				}
@@ -528,6 +629,7 @@ void Topograph::fresh_cd_buff() {
 				if (it->second != NULL && mem_rely(it->first, this_mem)) {
 					((it->second)->chl).push_back(make_pair(tmp, it->second->r_cycle - tmp->cycle + tmp->w_cycle));
 					(this->mem_read).erase(it++);
+					tmp->indeg++;
 				}
 				else {
 					it++;
@@ -537,11 +639,13 @@ void Topograph::fresh_cd_buff() {
 				if (it->second != NULL && mem_rely(it->first, this_mem)) {
 					((it->second)->chl).push_back(make_pair(tmp, it->second->cycle - tmp->cycle + tmp->w_cycle));
 					(this->mem_written).erase(it++);
+					tmp->indeg++;
 				}
 				else {
 					it++;
 				}
 			}
+			this->mem_written[this_mem] = tmp;
 		}
 	}
 }
@@ -981,7 +1085,7 @@ void Topograph::build_dependency(Instr* x) {
 }
 */
 
-void process_file(char* destination, char* source) {
+void process_file(char* destination, char* source, void (Topograph::* Func)(FILE* fp)) {
 	FILE *fpin, *fpout;
 	fpin = fopen(source, "r");
 	fpout = fopen(destination, "w");
@@ -1003,7 +1107,7 @@ void process_file(char* destination, char* source) {
 			if (st) {
 				// fprintf(fpout, "%s", sentence);
 				if (st == 1) {
-					topo.reschedule(fpout);
+					(topo.*Func)(fpout);
 					topo.clear();
 
 					fprintf(fpout, "%s", sentence);
@@ -1017,7 +1121,7 @@ void process_file(char* destination, char* source) {
 			(topo.container).push_back(instr_x);
 			topo.instr_num++;
 			if (!para_flag) topo.Timer++;
-			if (!strcmp(buf, "SNOP")) topo.Timer += instr_x->input1[0] - '0';
+			if (!strcmp(buf, "SNOP")) topo.Timer += instr_x->input1[0] - '0' - 1;
 			//printf("%s \t type: %d \tfunc_unit:%s   \tcycle:%d \tcond:%s \tinput1:%s \tinput2:%s \tinput3:%s \toutput1:%s \tr_cycle:%d \tw_cycle:%d\n\n",\
 				instr_x->instr_str, st, instr_x->func_unit, instr_x->cycle, instr_x->cond, instr_x->input1, instr_x->input2, \
 				instr_x->input3, instr_x->output1, instr_x->r_cycle, instr_x->w_cycle);
@@ -1034,7 +1138,7 @@ void process_file(char* destination, char* source) {
 			//}puts("");
 		
 		}
-		topo.reschedule(fpout);
+		(topo.*Func)(fpout);
 	}
 	
 
