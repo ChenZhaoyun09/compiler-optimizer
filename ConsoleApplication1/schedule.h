@@ -31,6 +31,7 @@ unordered_map<string, pair<int, int> > func_no;
 
 void load_func_table() {
 	func_no["M1/M2"] = make_pair(0, 1);
+	func_no["M1/M2/SIEU"] = make_pair(0, 2);
 	func_no["SIEU"] = make_pair(2, 2);
 	func_no["SLDST"] = make_pair(3, 3);
 	func_no["SBR"] = make_pair(4, 4);
@@ -38,14 +39,17 @@ void load_func_table() {
 	func_no["M1"] = make_pair(5, 5);
 	func_no["VIEU"] = make_pair(8, 8);
 	func_no["VLDST"] = make_pair(9, 10);
-	//func_no["VLDST1"] = make_pair(10, 10);
 }
 
-
+struct Instr_cmp1 {
+	bool operator() (const Instr* x, const Instr* y) const {
+		return x->cycle < y->cycle;// Instr in high priority with long cycle
+	}
+};
 
 static Instr* schedule_queue_r[num_of_func_unit][max_num_of_instr];
 static Instr* schedule_queue_w[num_of_func_unit][max_num_of_instr];
-static queue<Instr*> zero_indeg_instr;
+static priority_queue<Instr*, vector<Instr*>, Instr_cmp1> zero_indeg_instr;
 static int sq_max_len = 0;
 
 
@@ -118,9 +122,23 @@ static void unplace(Instr* x, int no_func, int time_pos) {
 }
 
 static void realloc_mac(Instr* x, int no_func) {
+	char* tmp = (char*)malloc((strlen(x->instr_str) + 3) * sizeof(char));
 	int pos = findchar(x->instr_str, '.');
-	int no_mac = no_func - func_no[string(x->func_unit)].first + 1;
-	x->instr_str[pos + 2] = no_mac + '0';
+	if (pos == -1) pos = findchar(x->instr_str + 2, '\t');
+
+	strncpy(tmp, x->instr_str, pos);
+
+	if (no_func != func_no["SIEU"].first) {
+		strcpy(tmp + pos, x->instr_str + pos);
+	}
+	else {
+		tmp[pos] = '.', tmp[pos + 1] = 'M';
+		tmp[pos + 2] = no_func - func_no[x->func_unit].first + '1';
+		strcpy(tmp + pos + 3, x->instr_str + pos);
+	}
+
+	free(x->instr_str);
+	x->instr_str = tmp;
 }
 
 static void load_zero_indeg_instr(Topograph* topo) {
@@ -176,7 +194,7 @@ void Topograph::reschedule(FILE* fp) {
 	load_zero_indeg_instr(this);
 
 	while (zero_indeg_instr.size()) {
-		x = zero_indeg_instr.front();
+		x = zero_indeg_instr.top();
 		zero_indeg_instr.pop();
 
 		// if this instruction is SNOP
@@ -219,7 +237,7 @@ void Topograph::output_topo_graph(FILE* fp) {
 	//	printf("%s", x->instr_str);
 	//}puts("");
 
-	sort(this->container.begin(), this->container.end(), Instr_cmp);
+	//sort(this->container.begin(), this->container.end(), Instr_cmp);
 	for (int i = 0, len = this->container.size(); i < len; i++) {
 		x = this->container[i];
 		// fprintf(fp, "%schildren: ", x->instr_str);

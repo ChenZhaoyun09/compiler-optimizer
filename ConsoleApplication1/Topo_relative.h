@@ -522,9 +522,11 @@ void Topograph::fresh_cd_buff() {
 					
 					for (i = 0; i < (ptr->chl).size(); i++) {
 						Instr* child = (ptr->chl[i]).first;
-						if (tmp != child) {
-							child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
-							tmp->indeg++;
+						if (!strcmp(child->cond, tmp->output1) || !strcmp(child->input1, tmp->output1) || !strcmp(child->input2, tmp->output1) || !strcmp(child->input3, tmp->output1)) {
+							if (tmp != child) {
+								child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
+								tmp->indeg++;
+							}
 						}
 					}
 				}
@@ -556,9 +558,11 @@ void Topograph::fresh_cd_buff() {
 					
 						for (i = 0; i < (ptr->chl).size(); i++) {
 							Instr* child = (ptr->chl[i]).first;
-							if (tmp != child) {
-								child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
-								tmp->indeg++;
+							if (!strcmp(child->cond, tmp->output1) || !strcmp(child->input1, tmp->output1) || !strcmp(child->input2, tmp->output1) || !strcmp(child->input3, tmp->output1)) {
+								if (tmp != child) {
+									child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
+									tmp->indeg++;
+								}
 							}
 						}
 					}
