@@ -4,8 +4,8 @@ D:\optimizer\ConsoleApplication1\analyser.h(321,31): warning C4018: “<”: 有
 D:\optimizer\ConsoleApplication1\analyser.h(359,33): warning C4018: “<”: 有符号/无符号不匹配
 D:\optimizer\ConsoleApplication1\analyser.h(390,31): warning C4018: “<”: 有符号/无符号不匹配
 D:\optimizer\ConsoleApplication1\analyser.h(420,31): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\schedule.h(103,20): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\schedule.h(131,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\schedule.h(104,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\schedule.h(132,20): warning C4018: “<”: 有符号/无符号不匹配
 D:\optimizer\ConsoleApplication1\Topo_relative.h(151,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
 D:\optimizer\ConsoleApplication1\Topo_relative.h(188,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
 D:\optimizer\ConsoleApplication1\Topo_relative.h(190,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据

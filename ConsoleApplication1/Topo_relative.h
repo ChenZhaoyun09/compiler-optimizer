@@ -523,7 +523,7 @@ void Topograph::fresh_cd_buff() {
 					for (i = 0; i < (ptr->chl).size(); i++) {
 						Instr* child = (ptr->chl[i]).first;
 						if (tmp != child) {
-							child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle));
+							child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
 							tmp->indeg++;
 						}
 					}
@@ -557,7 +557,7 @@ void Topograph::fresh_cd_buff() {
 						for (i = 0; i < (ptr->chl).size(); i++) {
 							Instr* child = (ptr->chl[i]).first;
 							if (tmp != child) {
-								child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle));
+								child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
 								tmp->indeg++;
 							}
 						}
@@ -627,7 +627,7 @@ void Topograph::fresh_cd_buff() {
 			mem_info this_mem(AR, OR, offset);
 			for (map<mem_info, Instr*, mem_info_cmp>::iterator it = this->mem_read.begin(); it != this->mem_read.end();) {
 				if (it->second != NULL && mem_rely(it->first, this_mem)) {
-					((it->second)->chl).push_back(make_pair(tmp, it->second->r_cycle - tmp->cycle + tmp->w_cycle));
+					((it->second)->chl).push_back(make_pair(tmp, it->second->r_cycle - tmp->cycle + tmp->w_cycle - 1));
 					(this->mem_read).erase(it++);
 					tmp->indeg++;
 				}

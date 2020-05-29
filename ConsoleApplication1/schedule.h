@@ -35,9 +35,10 @@ void load_func_table() {
 	func_no["SLDST"] = make_pair(3, 3);
 	func_no["SBR"] = make_pair(4, 4);
 	func_no["M1/M2/M3"] = make_pair(5, 7);
+	func_no["M1"] = make_pair(5, 5);
 	func_no["VIEU"] = make_pair(8, 8);
-	func_no["VLDST0"] = make_pair(9, 9);
-	func_no["VLDST1"] = make_pair(10, 10);
+	func_no["VLDST"] = make_pair(9, 10);
+	//func_no["VLDST1"] = make_pair(10, 10);
 }
 
 
@@ -57,7 +58,7 @@ static pair<int, int> find_fit(char* func_unit, int start, int cycle, int read_c
 	int best_fit = 0x3f3f3f3f, no_func;
 	int i, j, k;
 	bool flag;
-	for (i = pr.first; i <= pr.second; i++) {
+	for (i = pr.second; i >= pr.first; i--) {
 		for (j = start; j < max_num_of_instr; j++) {
 			flag = 1;
 			for (k = j; k < j + read_cycle; k++) {
