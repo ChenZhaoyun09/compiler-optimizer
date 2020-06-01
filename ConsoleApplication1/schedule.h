@@ -36,6 +36,7 @@ void load_func_table() {
 	func_no["SLDST"] = make_pair(3, 3);
 	func_no["SBR"] = make_pair(4, 4);
 	func_no["M1/M2/M3"] = make_pair(5, 7);
+	func_no["M1/M2/M3/VIEU"] = make_pair(5, 8);
 	func_no["M1"] = make_pair(5, 5);
 	func_no["VIEU"] = make_pair(8, 8);
 	func_no["VLDST"] = make_pair(9, 10);
@@ -122,23 +123,13 @@ static void unplace(Instr* x, int no_func, int time_pos) {
 }
 
 static void realloc_mac(Instr* x, int no_func) {
-	char* tmp = (char*)malloc((strlen(x->instr_str) + 3) * sizeof(char));
-	int pos = findchar(x->instr_str, '.');
-	if (pos == -1) pos = findchar(x->instr_str + 2, '\t');
-
-	strncpy(tmp, x->instr_str, pos);
-
-	if (no_func != func_no["SIEU"].first) {
-		strcpy(tmp + pos, x->instr_str + pos);
+	if (no_func != func_no["SIEU"].first && no_func != func_no["VIEU"].first) {
+		int tail = strlen(x->instr_name);
+		x->instr_name[tail++] = '.';
+		x->instr_name[tail++] = 'M';
+		x->instr_name[tail++] = no_func - func_no[x->func_unit].first + '1';
+		x->instr_name[tail] = '\0';
 	}
-	else {
-		tmp[pos] = '.', tmp[pos + 1] = 'M';
-		tmp[pos + 2] = no_func - func_no[x->func_unit].first + '1';
-		strcpy(tmp + pos + 3, x->instr_str + pos);
-	}
-
-	free(x->instr_str);
-	x->instr_str = tmp;
 }
 
 static void load_zero_indeg_instr(Topograph* topo) {
@@ -157,7 +148,7 @@ static void load_zero_indeg_instr(Topograph* topo) {
 static void output_reschedule_result(FILE* fp) {
 	Instr* x;
 	bool SNOP, first_instr;
-	int snop = 0, pos;
+	int snop = 0;
 
 	for (int j = 0; j < sq_max_len; j++) {
 		SNOP = 1;
@@ -168,7 +159,6 @@ static void output_reschedule_result(FILE* fp) {
 			SNOP = 0;
 			x = schedule_queue_r[i][j];
 			unplace(x, i, j);
-			for (pos = 0; skip_char(x->instr_str[pos]); pos++);
 
 			if (first_instr) {
 				first_instr = 0;
@@ -176,10 +166,24 @@ static void output_reschedule_result(FILE* fp) {
 					fprintf(fp, "\t\tSNOP\t\t%d\n", snop);
 					snop = 0;
 				}
-				fprintf(fp, "\t\t%s", x->instr_str + pos);
 			}
-			else fprintf(fp, "\t|\t%s", x->instr_str + pos);
+			else fputc('|', fp);
 
+			if (x->cond[0] != '\0')
+				fprintf(fp, "\t[%s]\t%s", x->cond, x->instr_name);
+			else
+				fprintf(fp, "\t\t%s", x->instr_name);
+
+			if (x->input1[0] != '\0')
+				fprintf(fp, "\t%s", x->input1);
+			if (x->input2[0] != '\0')
+				fprintf(fp, ", %s", x->input2);
+			if (x->input3[0] != '\0')
+				fprintf(fp, ", %s", x->input3);
+			if (x->output1[0] != '\0')
+				fprintf(fp, ", %s", x->output1);
+
+			fputc('\n', fp);
 		}
 		if (SNOP) snop++;
 	}
@@ -198,13 +202,11 @@ void Topograph::reschedule(FILE* fp) {
 		zero_indeg_instr.pop();
 
 		// if this instruction is SNOP
-		if ((pos = findchar(x->instr_str, 'S')) != -1) {
-			if (!strncmp(x->instr_str + pos, "SNOP", 4))
-				continue;
-			if (!strncmp(x->instr_str + pos, "SBR", 3)) {
-				sbr = x;
-				continue;
-			}
+		if (!strcmp(x->instr_name, "SNOP"))
+			continue;
+		if (!strcmp(x->instr_name, "SBR")) {
+			sbr = x;
+			continue;
 		}
 
 		pr = find_fit(x->func_unit, x->last_fa_end_time, x->cycle, x->r_cycle, x->w_cycle);

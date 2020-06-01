@@ -1,11 +1,12 @@
 ﻿  optimizer.cpp
 D:\optimizer\ConsoleApplication1\analyser.h(89,21): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\analyser.h(321,31): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\analyser.h(359,33): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\analyser.h(390,31): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\analyser.h(420,31): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\schedule.h(108,20): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\schedule.h(150,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(300,31): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(338,33): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(369,31): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(399,31): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\schedule.h(109,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\schedule.h(141,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\schedule.h(195,6): warning C4101: “pos”: 未引用的局部变量
 D:\optimizer\ConsoleApplication1\Topo_relative.h(151,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
 D:\optimizer\ConsoleApplication1\Topo_relative.h(188,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
 D:\optimizer\ConsoleApplication1\Topo_relative.h(190,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
@@ -20,6 +21,6 @@ D:\optimizer\ConsoleApplication1\Topo_relative.h(559,21): warning C4018: “<”
 D:\optimizer\ConsoleApplication1\Topo_relative.h(626,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
 D:\optimizer\ConsoleApplication1\Topo_relative.h(1130,1): warning C4010: 单行注释包含行继续符
 D:\optimizer\ConsoleApplication1\Topo_relative.h(1131,1): warning C4010: 单行注释包含行继续符
-D:\optimizer\ConsoleApplication1\analyser.h(211): warning C4715: “sentence_type”: 不是所有的控件路径都返回值
+D:\optimizer\ConsoleApplication1\analyser.h(212): warning C4715: “sentence_type”: 不是所有的控件路径都返回值
 D:\optimizer\ConsoleApplication1\analyser.h(92): warning C4715: “Refer_table::get_refer_unit”: 不是所有的控件路径都返回值
   ConsoleApplication1.vcxproj -> D:\optimizer\Debug\ConsoleApplication1.exe

@@ -1,0 +1,75 @@
+﻿  optimizer.cpp
+D:\optimizer\ConsoleApplication1\analyser.h(47,14): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(50,3): error C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(51,10): error C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(89,21): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(144,18): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(164,20): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(166,20): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(252,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(292,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\analyser.h(321,31): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(359,33): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(390,31): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\analyser.h(420,31): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\schedule.h(20,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\schedule.h(109,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\schedule.h(133,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\schedule.h(138,3): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\schedule.h(130,2): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\schedule.h(151,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\Topo_relative.h(31,3): error C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(44,2): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(45,2): error C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(148,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(151,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(188,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(190,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(289,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(292,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(329,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(331,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(431,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(434,36): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(471,19): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(473,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(156,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(159,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(163,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(166,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(173,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(176,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(180,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(183,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(297,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(300,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(304,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(307,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(314,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(317,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(321,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(324,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(439,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(442,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(446,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(449,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(456,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(459,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(463,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(466,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(523,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\Topo_relative.h(559,21): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\Topo_relative.h(584,5): error C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(626,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(592,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(595,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(599,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(602,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(609,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(612,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(616,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(619,6): error C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(1130,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\Topo_relative.h(1131,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\Topo_relative.h(1094,9): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\optimizer\ConsoleApplication1\Topo_relative.h(1095,10): error C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.

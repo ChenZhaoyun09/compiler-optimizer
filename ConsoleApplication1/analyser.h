@@ -94,6 +94,7 @@ struct Refer_table {
 
 struct Instr {
 	char* instr_str;
+	char instr_name[16];
 	char func_unit[16];
 	char cond[16];
 	char input1[16], input2[16], input3[16];
@@ -253,7 +254,6 @@ struct Topograph {
 
 
 		int i, ii;
-		char instr_name[16];
 		// condition register
 		for (i = 0; sentence[i] == '\t' || sentence[i] == '|' || sentence[i] == ' '; i++);
 		if (sentence[i] == '[') {
@@ -268,36 +268,15 @@ struct Topograph {
 		// func unit
 		while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
 		for (ii = 0; sentence[i] != ' ' && sentence[i] != '\t' && sentence[i] != '\n'; i++, ii++)
-			instr_name[ii] = sentence[i];
-		instr_name[ii] = '\0';
-		if ((ii = findchar(instr_name, '.')) != -1) instr_name[ii] = '\0';
+			res.instr_name[ii] = sentence[i];
+		res.instr_name[ii] = '\0';
+		if ((ii = findchar(res.instr_name, '.')) != -1) res.instr_name[ii] = '\0';
 
 
-/*		// process [Rx] SBR instruction specially!
-		if (instr_name[0] == '[') {
 
-			int iii, len = strlen(instr_name);
-			ii = instr_name[1] == '!' ? 2 : 1;
-			for (iii = 0; ii < len - 1; ii++, iii++)
-				res.input1[iii] = instr_name[ii];
-			res.input1[iii] = '\0';
 
-			for (ii = 0, ++i; sentence[i] != ' ' && sentence[i] != '\t'; i++, ii++)
-				instr_name[ii] = sentence[i];
-			instr_name[ii] = '\0';
-		}
-*/
-
-		Refer_unit refer_unit = refer_table.get_refer_unit(instr_name);
+		Refer_unit refer_unit = refer_table.get_refer_unit(res.instr_name);
 		strcpy(res.func_unit, refer_unit.func_unit);
-		// if it is an SBR instruction
-/*		if (strcmp(res.input1, "")) {
-			res.cycle = refer_unit.cycle;
-			res.r_cycle = refer_unit.r_cycle;
-			res.w_cycle = refer_unit.w_cycle;
-			All_Instr[instr_num] = res;
-			return &All_Instr[instr_num];
-		}*/
 
 
 		if (strcmp(refer_unit.input[0], "")) {
