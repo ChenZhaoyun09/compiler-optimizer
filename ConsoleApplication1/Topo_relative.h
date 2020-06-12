@@ -8,16 +8,6 @@
 using namespace std;
 
 
-
-inline bool isalpha(char x) {
-	return ('a' <= x && x <= 'z') || ('A' <= x && x <= 'Z');
-}
-inline bool isdigit(char x) {
-	return '0' <= x && x <= '9';
-}
-inline bool isaord(char x) {
-	return isalpha(x) || isdigit(x);
-}
 inline int peek(FILE* fp) {
 	int c = fgetc(fp);
 	ungetc(c, fp);
@@ -40,9 +30,34 @@ bool mem_rely(const mem_info& fa, const mem_info& chl) {
 	else return false;
 }
 
+
+
 void add_num_after_str(char* destination, char* source, int num) {
 	strcpy(destination, source);
 	sprintf(destination + strlen(destination), "%d", num);
+}
+
+bool reg_equal(char* str_conj, char* str) {
+	if (findchar(str_conj, ':') ==-1 || str_conj[0]=='\0') return !strcmp(str_conj, str);
+	char alpha[8], cnum[8];
+	int inum;
+	int i, ii;
+	for (i = 0; isalpha(str_conj[i]); i++)
+		alpha[i] = str_conj[i];
+	alpha[i] = '\0';
+	for (ii = 0; isdigit(str_conj[i]); i++, ii++)
+		cnum[ii] = str_conj[i];
+	cnum[ii] = '\0';
+	inum = atoi(cnum);
+
+	int len = strlen(str_conj);
+	char reg_name[10];
+	int flag = 0;
+	for (i = str_conj[len - 1] - '0'; i; i--) {
+		add_num_after_str(reg_name, alpha, inum + i - 1);
+		if (!strcmp(reg_name, str)) flag = 1;
+	}
+	return flag;
 }
 
 void Topograph::push_to_cd_buff(Instr* x) {
@@ -522,7 +537,7 @@ void Topograph::fresh_cd_buff() {
 					
 					for (i = 0; i < (ptr->chl).size(); i++) {
 						Instr* child = (ptr->chl[i]).first;
-						if (!strcmp(child->cond, tmp->output1) || !strcmp(child->input1, tmp->output1) || !strcmp(child->input2, tmp->output1) || !strcmp(child->input3, tmp->output1)) {
+						if (reg_equal(child->cond, tmp->output1) || reg_equal(child->input1, tmp->output1) || reg_equal(child->input2, tmp->output1) || reg_equal(child->input3, tmp->output1)) {
 							if (tmp != child) {
 								child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
 								tmp->indeg++;
@@ -558,7 +573,7 @@ void Topograph::fresh_cd_buff() {
 					
 						for (i = 0; i < (ptr->chl).size(); i++) {
 							Instr* child = (ptr->chl[i]).first;
-							if (!strcmp(child->cond, tmp->output1) || !strcmp(child->input1, tmp->output1) || !strcmp(child->input2, tmp->output1) || !strcmp(child->input3, tmp->output1)) {
+							if (reg_equal(child->cond, tmp->output1) || reg_equal(child->input1, tmp->output1) || reg_equal(child->input2, tmp->output1) || reg_equal(child->input3, tmp->output1)) {
 								if (tmp != child) {
 									child->chl.push_back(make_pair(tmp, child->r_cycle - tmp->cycle + tmp->w_cycle - 1));
 									tmp->indeg++;

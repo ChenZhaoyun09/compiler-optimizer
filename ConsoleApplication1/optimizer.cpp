@@ -5,9 +5,9 @@
 #include "Topo_relative.h"
 using namespace std;
 
-char reference_filename[] = "D:\\program\\instruction.csv";
-char input_file[] = "D:\\program\\test.asm";
-char output_file[] = "D:\\program\\test_pro.asm";
+char reference_filename[] = ".\\instruction.csv";
+char input_file[] = ".\\test.asm";
+char output_file[] = ".\\test_pro.asm";
 
 int main()
 {

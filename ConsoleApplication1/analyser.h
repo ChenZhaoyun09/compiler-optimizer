@@ -210,18 +210,7 @@ int sentence_type(char* str, char* sentence) {
 		return flag != -1 ? 1 : 0;
 	}
 }
-/*
-	if (str[0] == ';' || str[0] == '\0') {
-		int pos = findchar(sentence, 'c');
-		if (pos != -1) return !strncmp(sentence + pos, "condjump", 8) ? 1 : 3;
-		else return 3;
-	}
-	int flag = findchar(str, ':');
-	if (str[0] == '.')
-		return flag != -1 ? 1 : 2;
-	return flag != -1 ? 1 : 0;
-}
-*/
+
 
 
 struct Topograph {

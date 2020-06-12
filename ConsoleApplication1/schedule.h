@@ -4,11 +4,21 @@
 #include <queue>
 #include <unordered_map>
 #include "analyser.h"
+
 using namespace std;
 
 const int num_of_func_unit = 11;
 const int max_num_of_instr = 1024;
 
+inline bool isalpha(char x) {
+	return ('a' <= x && x <= 'z') || ('A' <= x && x <= 'Z');
+}
+inline bool isdigit(char x) {
+	return '0' <= x && x <= '9';
+}
+inline bool isaord(char x) {
+	return isalpha(x) || isdigit(x);
+}
 
 inline bool skip_char(char c) {
 	return c == '\t' || c == '|' || c == ' ' || c == '\n';
@@ -99,9 +109,9 @@ static void place(Instr* x, int no_func, int time_pos) {
 
 	//place this instruction into schedule_queue
 	for (int i = time_pos; i < time_pos + x->r_cycle; i++)
-		schedule_queue_r[no_func][time_pos] = x;
+		schedule_queue_r[no_func][i] = x;
 	for (int i = time_pos + (x->cycle) - (x->w_cycle); i < time_pos + x->cycle; i++)
-		schedule_queue_w[no_func][time_pos] = x;
+		schedule_queue_w[no_func][i] = x;
 
 	if (time_pos + (x->cycle) > sq_max_len) sq_max_len = time_pos + (x->cycle);
 
@@ -148,7 +158,9 @@ static void load_zero_indeg_instr(Topograph* topo) {
 static void output_reschedule_result(FILE* fp) {
 	Instr* x;
 	bool SNOP, first_instr;
+	int last_instr_cycle = 0;
 	int snop = 0;
+	int ii;
 
 	for (int j = 0; j < sq_max_len; j++) {
 		SNOP = 1;
@@ -173,20 +185,96 @@ static void output_reschedule_result(FILE* fp) {
 				fprintf(fp, "\t[%s]\t%s", x->cond, x->instr_name);
 			else
 				fprintf(fp, "\t\t%s", x->instr_name);
+			if (!strcmp(x->func_unit, "M1")) fprintf(fp, ".%s", x->func_unit);
 
 			if (x->input1[0] != '\0')
-				fprintf(fp, "\t%s", x->input1);
+			{
+				int flag = findchar(x->input1, ':');
+				if (flag == -1) fprintf(fp, "\t%s", x->input1);
+				else {
+					int len = x->input1[flag + 1] - '0';
+					char prefix[8];
+					for (ii = 0; isalpha(x->input1[ii]); ii++)
+						prefix[ii] = x->input1[ii];
+					prefix[ii] = '\0';
+					char reg[8];
+					strncpy(reg, x->input1+ii, flag-ii);
+					int reg_num = atoi(reg);
+					fprintf(fp, "\t");
+					for (ii = len-1; ii >= 0; ii--) {
+						fprintf(fp, "%s%d", prefix, reg_num + ii);
+						if (ii != 0) fprintf(fp, ":");
+					}
+				}
+
+			}
 			if (x->input2[0] != '\0')
-				fprintf(fp, ", %s", x->input2);
+			{
+				int flag = findchar(x->input2, ':');
+				if (flag == -1) fprintf(fp, ", %s", x->input2);
+				else {
+					int len = x->input2[flag + 1] - '0';
+					char prefix[8];
+					for (ii = 0; isalpha(x->input2[ii]); ii++)
+						prefix[ii] = x->input2[ii];
+					prefix[ii] = '\0';
+					char reg[8];
+					strncpy(reg, x->input2 + ii, flag - ii);
+					int reg_num = atoi(reg);
+					fprintf(fp, ", ");
+					for (ii = len - 1; ii >= 0; ii--) {
+						fprintf(fp, "%s%d", prefix, reg_num + ii);
+						if (ii != 0) fprintf(fp, ":");
+					}
+				}
+			}			
 			if (x->input3[0] != '\0')
-				fprintf(fp, ", %s", x->input3);
+			{
+				int flag = findchar(x->input3, ':');
+				if (flag == -1) fprintf(fp, ", %s", x->input3);
+				else {
+					int len = x->input3[flag + 1] - '0';
+					char prefix[8];
+					for (ii = 0; isalpha(x->input3[ii]); ii++)
+						prefix[ii] = x->input3[ii];
+					prefix[ii] = '\0';
+					char reg[8];
+					strncpy(reg, x->input3 + ii, flag - ii);
+					int reg_num = atoi(reg);
+					fprintf(fp, ", ");
+					for (ii = len - 1; ii >= 0; ii--) {
+						fprintf(fp, "%s%d", prefix, reg_num + ii);
+						if (ii != 0) fprintf(fp, ":");
+					}
+				}
+			}
 			if (x->output1[0] != '\0')
-				fprintf(fp, ", %s", x->output1);
+			{
+				int flag = findchar(x->output1, ':');
+				if (flag == -1) fprintf(fp, ", %s", x->output1);
+				else {
+					int len = x->output1[flag + 1] - '0';
+					char prefix[8];
+					for (ii = 0; isalpha(x->output1[ii]); ii++)
+						prefix[ii] = x->output1[ii];
+					prefix[ii] = '\0';
+					char reg[8];
+					strncpy(reg, x->output1 + ii, flag - ii);
+					int reg_num = atoi(reg);
+					fprintf(fp, ", ");
+					for (ii = len - 1; ii >= 0; ii--) {
+						fprintf(fp, "%s%d", prefix, reg_num + ii);
+						if (ii != 0) fprintf(fp, ":");
+					}
+				}
+			}
 
 			fputc('\n', fp);
+			last_instr_cycle = x->cycle;
 		}
 		if (SNOP) snop++;
 	}
+	if (last_instr_cycle > 1) fprintf(fp, "\t\tSNOP\t\t%d\n", last_instr_cycle - 1);
 }
 
 
