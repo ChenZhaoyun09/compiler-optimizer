@@ -1,3 +1,87 @@
+.global M7002_expsp_v
+
+M7002_expsp_v:
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+			SMOVIL			-140, R2
+			SMOVIL			-1, R3
+			SADDA.M2		R3:R2,AR15,AR12
+			SNOP 			1
+			SSTW			R4,*+AR12[0]		
+			SSTW			R5,*+AR12[1]
+			SSTW			R6,*+AR12[2]
+			SSTW			R7 ,*+AR12[3]
+			SSTW			R30 ,*+AR12[4]
+			SSTW			R31 ,*+AR12[5]
+			SSTW			R32 ,*+AR12[6]
+			SSTW			R33 ,*+AR12[7]
+			SSTW			R34 ,*+AR12[8]
+			SSTW			R35 ,*+AR12[9]
+			SSTW			R36 ,*+AR12[10]
+			SSTW			R37 ,*+AR12[11]
+			SSTW			R38 ,*+AR12[12]
+			SSTW			R39 ,*+AR12[13]
+			SSTW			R40 ,*+AR12[14]
+			SSTW			R41 ,*+AR12[15]
+			SSTW			R62 ,*+AR12[16]
+			SSTW			R63 ,*+AR12[17]
+			SMVAAGL.M1       AR7 , 	R0   
+	|		SMVAAGH.M2		  AR7 , R1
+			SMVAAGL.M1		  AR8 , R2
+	|		SMVAAGH.M2       AR8 , 	R3
+			SMVAAGL.M1       AR9 , 	R4   
+	|		SMVAAGH.M2		  AR9 , R5
+			SMVAAGL.M1		  AR14 , R6
+	|		SMVAAGH.M2       AR14 ,	 R7
+			SMVAAGL.M1       AR15 ,	 R8  
+	|		SMVAAGH.M2		  AR15 , R9
+				
+			SSTW			R0, *+AR12[18]
+			SSTW			R1, *+AR12[19]
+			SSTW			R2, *+AR12[20]
+			SSTW			R3, *+AR12[21]
+			SSTW			R4, *+AR12[22]
+			SSTW			R5, *+AR12[23]
+			SSTW			R6, *+AR12[24]	   
+			SSTW			R7, *+AR12[25]
+			SSTW			R8, *+AR12[26]
+			SSTW			R9, *+AR12[27]
+			  
+			SMVAAGL.M1		  OR8 , R0
+	|		SMVAAGH.M2       OR8 , 	R1
+			SMVAAGL.M1		  OR9 , R2
+	|		SMVAAGH.M2       OR9 , 	R3
+			SMVAAGL.M1		  OR10 , R4
+	|		SMVAAGH.M2       OR10 , R5
+			SMVAAGL.M1		  OR15 , R6
+	|		SMVAAGH.M2       OR15 ,	 R7
+			SSTW			R0, *+AR12[28]
+			SSTW			R1, *+AR12[29]
+			SSTW			R2, *+AR12[30]
+			SSTW			R3, *+AR12[31]
+			SSTW			R4, *+AR12[32]
+			SSTW			R5, *+AR12[33]	   
+			SSTW			R6, *+AR12[34]
+			SSTW			R7, *+AR12[35]     
+	   
+
+
+			SMOVIL			3,				R0									;
+			SMVCGC			R0,				SCR	
+			SNOP			1
+			
+
+			SMVAGA36.M1		R13:R12, AR1						; Aaddress
+			SMVAGA36.M1		R15:R14, AR2						; Caddress
+			SMOV.M1			R10, R57							; Num,
+			SNOP			1
+			
+		
+;******************************EXP_CALCULATE************************************************		
+		
+		
+M7002_expsp_v2:
 		SMOVIL			16, R8
 		SMOVIH 			0x00000000, R8
 		SMOVIL 		 	0, R9
@@ -127,3 +211,65 @@
 		SLT				0, R57, R1
 [R1]	SBR				M7002_expsp_v2	
 		SNOP			6
+	;; condjump to .M7002_expsp_v2 occurs
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+
+			
+			SLDW			*+AR12[18], R0
+			SLDW			*+AR12[19], R1
+			SLDW			*+AR12[20], R2
+			SLDW			*+AR12[21], R3
+			SLDW			*+AR12[22], R4
+			SLDW			*+AR12[23], R5
+			SLDW			*+AR12[24], R6
+			SLDW			*+AR12[25], R7
+			SLDW			*+AR12[26], R8
+			SLDW			*+AR12[27], R9
+			SNOP			4
+			SMVAGA36.M1       R1:R0,AR7    
+|			SMVAGA36.M2       R3:R2,AR8  
+			SMVAGA36.M1       R5:R4,AR9  
+|			SMVAGA36.M2       R7:R6,AR14 
+			SMVAGA36.M1       R9:R8,AR15
+			
+			SLDW			*+AR12[28], R0
+			SLDW			*+AR12[29], R1
+			SLDW			*+AR12[30], R2
+			SLDW			*+AR12[31], R3
+			SLDW			*+AR12[32], R4
+			SLDW			*+AR12[33], R5
+			SLDW			*+AR12[34], R6
+			SLDW			*+AR12[35], R7
+			SNOP			5
+|			SMVAGA36.M2       R1:R0,OR8  
+			SMVAGA36.M1       R3:R2,OR9
+|			SMVAGA36.M2       R5:R4,OR10
+			SMVAGA36.M1       R7:R6,OR15
+			
+			SLDW			*+AR12[0],R4		
+			SLDW			*+AR12[1],R5
+			SLDW			*+AR12[2],R6
+			SLDW			*+AR12[3],R7 
+			SLDW			*+AR12[4],R30 
+			SLDW			*+AR12[5],R31
+			SLDW			*+AR12[6],R32 
+			SLDW			*+AR12[7],R33 
+			SLDW			*+AR12[8],R34 
+			SLDW			*+AR12[9],R35 
+			SLDW			*+AR12[10],R36
+			SLDW			*+AR12[11],R37
+			SLDW			*+AR12[12],R38
+			SLDW			*+AR12[13],R39
+			SLDW			*+AR12[14],R40
+			SLDW			*+AR12[15],R41
+			SLDW			*+AR12[16],R62
+			SLDW			*+AR12[17],R63
+		
+		SBR 			R62
+		SNOP 			6
+		SWAIT
+
+
+.size M7002_expsp_v, .-M7002_expsp_v
+		

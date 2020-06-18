@@ -14,7 +14,7 @@ inline bool isalpha(char x) {
 	return ('a' <= x && x <= 'z') || ('A' <= x && x <= 'Z');
 }
 inline bool isdigit(char x) {
-	return '0' <= x && x <= '9';
+	return '0' <= x && x <= '9' || x == '-';
 }
 inline bool isaord(char x) {
 	return isalpha(x) || isdigit(x);
@@ -65,14 +65,14 @@ static int sq_max_len = 0;
 
 
 
-static pair<int, int> find_fit(char* func_unit, int start, int cycle, int read_cycle, int write_cycle) {
+static pair<int, int> find_fit(pair<int, int> pr, int start, int cycle, int read_cycle, int write_cycle) {
 	//make sure start >= 0
 	if (start < 0) start = 0;
-
-	pair<int, int> pr = func_no[string(func_unit)];
+	
 	int best_fit = 0x3f3f3f3f, no_func;
 	int i, j, k;
 	bool flag;
+
 	for (i = pr.second; i >= pr.first; i--) {
 		for (j = start; j < max_num_of_instr; j++) {
 			flag = 1;
@@ -158,7 +158,6 @@ static void load_zero_indeg_instr(Topograph* topo) {
 static void output_reschedule_result(FILE* fp) {
 	Instr* x;
 	bool SNOP, first_instr;
-	int last_instr_cycle = 0;
 	int snop = 0;
 	int ii;
 
@@ -199,6 +198,7 @@ static void output_reschedule_result(FILE* fp) {
 					prefix[ii] = '\0';
 					char reg[8];
 					strncpy(reg, x->input1+ii, flag-ii);
+					reg[flag - ii] = '\0';
 					int reg_num = atoi(reg);
 					fprintf(fp, "\t");
 					for (ii = len-1; ii >= 0; ii--) {
@@ -220,6 +220,7 @@ static void output_reschedule_result(FILE* fp) {
 					prefix[ii] = '\0';
 					char reg[8];
 					strncpy(reg, x->input2 + ii, flag - ii);
+					reg[flag - ii] = '\0';
 					int reg_num = atoi(reg);
 					fprintf(fp, ", ");
 					for (ii = len - 1; ii >= 0; ii--) {
@@ -240,6 +241,7 @@ static void output_reschedule_result(FILE* fp) {
 					prefix[ii] = '\0';
 					char reg[8];
 					strncpy(reg, x->input3 + ii, flag - ii);
+					reg[flag - ii] = '\0';
 					int reg_num = atoi(reg);
 					fprintf(fp, ", ");
 					for (ii = len - 1; ii >= 0; ii--) {
@@ -260,6 +262,7 @@ static void output_reschedule_result(FILE* fp) {
 					prefix[ii] = '\0';
 					char reg[8];
 					strncpy(reg, x->output1 + ii, flag - ii);
+					reg[flag - ii] = '\0';
 					int reg_num = atoi(reg);
 					fprintf(fp, ", ");
 					for (ii = len - 1; ii >= 0; ii--) {
@@ -270,16 +273,16 @@ static void output_reschedule_result(FILE* fp) {
 			}
 
 			fputc('\n', fp);
-			last_instr_cycle = x->cycle;
 		}
 		if (SNOP) snop++;
 	}
-	if (last_instr_cycle > 1) fprintf(fp, "\t\tSNOP\t\t%d\n", last_instr_cycle - 1);
+	if (snop > 0) fprintf(fp, "\t\tSNOP\t\t%d\n", snop);
 }
 
 
 void Topograph::reschedule(FILE* fp) {
 	Instr* x, * sbr = NULL;
+	Instr* swait = NULL;
 	int pos;
 	pair<int, int> pr;
 
@@ -289,6 +292,7 @@ void Topograph::reschedule(FILE* fp) {
 		x = zero_indeg_instr.top();
 		zero_indeg_instr.pop();
 
+		
 		// if this instruction is SNOP
 		if (!strcmp(x->instr_name, "SNOP"))
 			continue;
@@ -296,15 +300,38 @@ void Topograph::reschedule(FILE* fp) {
 			sbr = x;
 			continue;
 		}
+		if (!strcmp(x->instr_name, "SWAIT")) {
+			swait = x;
+			continue;
+		}
+		pr = func_no[string(x->func_unit)];
+		if (!strcmp(x->instr_name, "SMVAGA36")) {
+			int i = 0, ii = 0;
+			char cnum[10];
+			int inum = 0;
+			while (isalpha(x->output1[i])) i++;
+			for (ii = 0; isdigit(x->output1[i]); i++, ii++)
+				cnum[ii] = x->output1[i];
+			cnum[ii] = '\0';
+			inum = atoi(cnum);
+			if (inum < 8) pr = make_pair(0, 0);
+		}
 
-		pr = find_fit(x->func_unit, x->last_fa_end_time, x->cycle, x->r_cycle, x->w_cycle);
+
+		pr = find_fit(pr, x->last_fa_end_time, x->cycle, x->r_cycle, x->w_cycle);
 		if (!strncmp(x->func_unit, "M1/M2", 5)) realloc_mac(x, pr.first);
 		place(x, pr.first, pr.second);
 	}
 
 	if (sbr != NULL) {
-		pr = find_fit(sbr->func_unit, max(sbr->last_fa_end_time, sq_max_len - (sbr->cycle)), sbr->cycle, sbr->r_cycle, sbr->w_cycle);
+		pr = func_no[string(sbr->func_unit)];
+		pr = find_fit(pr, max(sbr->last_fa_end_time, sq_max_len - (sbr->cycle)), sbr->cycle, sbr->r_cycle, sbr->w_cycle);
 		place(sbr, pr.first, pr.second);
+	}
+	if (swait != NULL) {
+		pr = func_no[string(swait->func_unit)];
+		pr = find_fit(pr, max(swait->last_fa_end_time, sq_max_len), swait->cycle, swait->r_cycle, swait->w_cycle);
+		place(swait, pr.first, pr.second);
 	}
 
 	output_reschedule_result(fp);

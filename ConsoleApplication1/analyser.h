@@ -204,7 +204,8 @@ int sentence_type(char* str, char* sentence) {
 		if (pos != -1) return !strncmp(sentence + pos, "condjump", 8) ? 1 : 3;
 	}
 	else if (str[0] == '.' || str[0] == '\0') {
-		return flag != -1 ? 1 : 3;
+		if (flag != -1) return 1;
+		else return !strncmp(sentence + 1, "size", 4) ? 1 : 3;
 	}
 	else {
 		return flag != -1 ? 1 : 0;
@@ -294,14 +295,6 @@ struct Topograph {
 					res.input1[tmp_i++] = '\0';
 				}
 			}
-/*
-			char c = refer_unit.input[0][strlen(refer_unit.input[0]) - 1];
-			if ('0' <= c && c <= '9') {
-				int c_flag = findchar(res.input1, ':');
-				res.input1[ii++] = ':';
-				res.input1[ii++] = c;
-			}*/
-
 		}
 
 
@@ -400,6 +393,18 @@ struct Topograph {
 		
 
 		res.cycle = refer_unit.cycle;
+		if (!strcmp(res.instr_name, "SADDA") || !strcmp(res.instr_name, "SSUBA")) {
+			int k = 0;
+			char output[10];
+			int num = 0;
+			while (res.output1[k] < '0' || res.output1[k] > '9') k++;
+			for (ii = 0; res.output1[k] != '\0'; k++, ii++)
+				output[ii] = res.output1[k];
+			output[ii] = '\0';
+			num = atoi(output);
+			if (num > 7) res.cycle--;
+		}
+
 		res.r_cycle = refer_unit.r_cycle;
 		res.w_cycle = refer_unit.w_cycle;
 
@@ -413,6 +418,8 @@ struct Topograph {
 	void reschedule(FILE *fp);
 	void push_to_cd_buff(Instr* x);
 	void fresh_cd_buff();
+	void build_read_reg_dependency(Instr* x, char* input);
+	void build_read_mem_dependency(Instr* x, char* input, int load_store);
 	//void build_dependency(Instr* x);
 	void output_topo_graph(FILE* fp);
 };

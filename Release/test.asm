@@ -4,9 +4,9 @@ M7002_expsp_v:
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-			SMOVIL			-140, R6
-			SMOVIL			-1, R7
-			SADDA.M2		R7:R6,AR15,AR12
+			SMOVIL			-140, R2
+			SMOVIL			-1, R3
+			SADDA.M2		R3:R2,AR15,AR12
 			SNOP 			1
 			SSTW			R4,*+AR12[0]		
 			SSTW			R5,*+AR12[1]
@@ -214,26 +214,7 @@ M7002_expsp_v2:
 	;; condjump to .M7002_expsp_v2 occurs
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
-			SLDW			*+AR12[0],R4		
-			SLDW			*+AR12[1],R5
-			SLDW			*+AR12[2],R6
-			SLDW			*+AR12[3],R7 
-			SLDW			*+AR12[4],R30 
-			SLDW			*+AR12[5],R31
-			SLDW			*+AR12[6],R32 
-			SLDW			*+AR12[7],R33 
-			SLDW			*+AR12[8],R34 
-			SLDW			*+AR12[9],R35 
-			SLDW			*+AR12[10],R36
-			SLDW			*+AR12[11],R37
-			SLDW			*+AR12[12],R38
-			SLDW			*+AR12[13],R39
-			SLDW			*+AR12[14],R40
-			SLDW			*+AR12[15],R41
-			SLDW			*+AR12[16],R62
-			SLDW			*+AR12[17],R63
-			
-			SLDW			*+AR12[18], R0
+		SLDW			*+AR12[18], R0
 			SLDW			*+AR12[19], R1
 			SLDW			*+AR12[20], R2
 			SLDW			*+AR12[21], R3
@@ -263,9 +244,29 @@ M7002_expsp_v2:
 			SMVAGA36.M1       R3:R2,OR9
 |			SMVAGA36.M2       R5:R4,OR10
 			SMVAGA36.M1       R7:R6,OR15
+			
+			SLDW			*+AR12[0],R4		
+			SLDW			*+AR12[1],R5
+			SLDW			*+AR12[2],R6
+			SLDW			*+AR12[3],R7 
+			SLDW			*+AR12[4],R30 
+			SLDW			*+AR12[5],R31
+			SLDW			*+AR12[6],R32 
+			SLDW			*+AR12[7],R33 
+			SLDW			*+AR12[8],R34 
+			SLDW			*+AR12[9],R35 
+			SLDW			*+AR12[10],R36
+			SLDW			*+AR12[11],R37
+			SLDW			*+AR12[12],R38
+			SLDW			*+AR12[13],R39
+			SLDW			*+AR12[14],R40
+			SLDW			*+AR12[15],R41
+			SLDW			*+AR12[16],R62
+			SLDW			*+AR12[17],R63
 		
 		SBR 			R62
 		SNOP 			6
+		SWAIT
 
 .size M7002_expsp_v, .-M7002_expsp_v
 		
