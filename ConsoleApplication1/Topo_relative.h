@@ -408,6 +408,19 @@ void Topograph::build_read_mem_dependency(Instr* x, char* input, int load_store)
 	if (self_change == true)
 		this->reg_offset[reg_info(AR)] = offset;
 
+	// all mem_read or mem_write Instr should be placed after last AR change Instr
+	reg_info resA(AR);
+	Instr* last_AR_change = this->reg_written[AR];
+	if (load_store) {
+		last_AR_change->chl.push_back(make_pair(x, last_AR_change->cycle));
+		x->indeg++;
+	}
+	else {
+		last_AR_change->chl.push_back(make_pair(x, last_AR_change->cycle - x->cycle + x->w_cycle));
+		x->indeg++;
+	}
+
+
 	if (!isdigit(OR[0])) {
 		reg_info resO(OR);
 		//this->reg_read[res] = x;
@@ -430,7 +443,7 @@ void Topograph::build_read_mem_dependency(Instr* x, char* input, int load_store)
 		}
 	}
 
-	reg_info resA(AR);
+	//reg_info resA(AR);
 	if (self_change == false) {
 		//this->reg_read[res] = x;
 		Instr* ptr = this->reg_written[resA];
@@ -476,8 +489,8 @@ void Topograph::build_read_mem_dependency(Instr* x, char* input, int load_store)
 			if (it->second != NULL && mem_rely(it->first, res)) {
 				((it->second)->chl).push_back(make_pair(x, it->second->cycle));
 				x->indeg++;
-				it++;
-				//(this->mem_written).erase(it++);
+				//it++;
+				(this->mem_written).erase(it++);
 			}
 			else {
 				it++;
