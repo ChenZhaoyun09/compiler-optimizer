@@ -39,10 +39,10 @@ struct Refer_unit {
 
 struct Refer_table {
 	vector<Refer_unit> table;
-	
+
 	void load_table(char* filename) {
-		int i,ii;
-		char instr_info[256],buf[16];
+		int i, ii;
+		char instr_info[256], buf[16];
 		Refer_unit x;
 		FILE* fp = fopen(filename, "r");
 
@@ -102,7 +102,7 @@ struct Instr {
 	int cycle, r_cycle, w_cycle;
 	int indeg, last_fa_end_time;
 	vector<pair<Instr*, int> > chl;
-		
+
 	Instr() {
 		func_unit[0] = '\0';
 		cond[0] = '\0';
@@ -132,7 +132,7 @@ struct cd_Instr {
 		counter = cnt;
 		AR_offset = offset;
 	}
-	
+
 	bool operator < (const cd_Instr& b)const {
 		return counter > b.counter;
 	}
@@ -151,7 +151,7 @@ struct reg_info {
 	}
 };
 struct reg_info_cmp {
-	int operator () (const reg_info &x)const {
+	int operator () (const reg_info& x)const {
 		return hash_str(x.name);
 	}
 };
@@ -161,7 +161,7 @@ struct mem_info {
 	char OR[16];
 	long long AR_offset;
 
-	mem_info(char* AR1=NULL, char* OR1=NULL, long long x = 0) {
+	mem_info(char* AR1 = NULL, char* OR1 = NULL, long long x = 0) {
 		if (AR1 != NULL) strcpy(AR, AR1);
 		else AR[0] = '\0';
 		if (OR1 != NULL) strcpy(OR, OR1);
@@ -170,7 +170,7 @@ struct mem_info {
 	}
 };
 struct mem_info_cmp {
-	bool operator() (const mem_info& a,const mem_info& b)const {
+	bool operator() (const mem_info& a, const mem_info& b)const {
 		int res = strcmp(a.AR, b.AR);
 		if (res) return res < 0;
 		res = strcmp(a.OR, b.OR);
@@ -181,12 +181,12 @@ struct mem_info_cmp {
 
 
 int get_first_word(char* destination, char* source) {
-	int i = 0 , ii;
+	int i = 0, ii;
 	int para_flag = 0;
 	//for (i = 0; source[i] == '\t' || source[i] == '|' || source[i] == ' '; i++);
 	while (1) {
 		if (source[i] != '\t' && source[i] != ' ' && source[i] != '|') break;
-		if (source[i] == '|') para_flag = 1; 
+		if (source[i] == '|') para_flag = 1;
 		i++;
 	}
 	for (ii = 0; source[i] != ' ' && source[i] != '\t' && source[i] != '\n'; i++, ii++)
@@ -219,8 +219,8 @@ struct Topograph {
 	Instr All_Instr[INSTR_MAX_SIZE]; // store all instr
 	vector<Instr*> container; // store pointers of all Instr
 	priority_queue<cd_Instr> cd_buff;
-	unordered_map<reg_info, Instr*, reg_info_cmp> reg_written, up_AR_change;// , reg_read;
-	map<mem_info,Instr*,mem_info_cmp> mem_written, mem_read;
+	unordered_map<reg_info, Instr*, reg_info_cmp> reg_written, up_AR_change;// unpredictable AR change
+	map<mem_info, Instr*, mem_info_cmp> mem_written, mem_read;
 	unordered_map<reg_info, long long, reg_info_cmp> reg_offset;
 
 
@@ -276,18 +276,18 @@ struct Topograph {
 			res.input1[ii] = '\0';
 			int c_flag = findchar(refer_unit.input[0], ':');
 			if (c_flag != -1) {
-				char c = refer_unit.input[0][c_flag+1];
+				char c = refer_unit.input[0][c_flag + 1];
 				int res_flag = findchar(res.input1, ':');
 				if (res_flag == -1) {
 					if (res.input1[0] == 'R' || (res.input1[0] == 'V' && res.input1[1] == 'R')) {
 						res.input1[ii++] = ':';
 						res.input1[ii++] = c;
 						res.input1[ii++] = '\0';
-					}	
+					}
 				}
 				else {
 					int tmp_i = 0;
-					for (ii = res_flag+1; ii < strlen(res.input1); ii++) {
+					for (ii = res_flag + 1; ii < strlen(res.input1); ii++) {
 						res.input1[tmp_i++] = res.input1[ii];
 					}
 					res.input1[tmp_i++] = ':';
@@ -301,7 +301,7 @@ struct Topograph {
 		if (strcmp(refer_unit.input[1], "")) {
 			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
 			//for (; sentence[i] != ','; i++);
-			for (ii = 0;  sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
+			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
 				res.input2[ii] = sentence[i];
 			res.input2[ii] = '\0';
 			int c_flag = findchar(refer_unit.input[1], ':');
@@ -348,7 +348,7 @@ struct Topograph {
 				}
 				else {
 					int tmp_i = 0;
-					for (ii = res_flag+1; ii < strlen(res.input3); ii++) {
+					for (ii = res_flag + 1; ii < strlen(res.input3); ii++) {
 						res.input3[tmp_i++] = res.input3[ii];
 					}
 					res.input3[tmp_i++] = ':';
@@ -362,7 +362,7 @@ struct Topograph {
 		if (strcmp(refer_unit.output[0], "")) {
 			while (sentence[i] == '\t' || sentence[i] == ' ' || sentence[i] == ',') i++;
 			//for (; sentence[i] != ','; i++);
-			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i]!= ' '; i++, ii++)
+			for (ii = 0; sentence[i] != ',' && sentence[i] != '\n' && sentence[i] != '\t' && sentence[i] != ' '; i++, ii++)
 				res.output1[ii] = sentence[i];
 			res.output1[ii] = '\0';
 			int c_flag = findchar(refer_unit.output[0], ':');
@@ -378,7 +378,7 @@ struct Topograph {
 				}
 				else {
 					int tmp_i = 0;
-					for (ii = res_flag+1; ii < strlen(res.output1); ii++) {
+					for (ii = res_flag + 1; ii < strlen(res.output1); ii++) {
 						res.output1[tmp_i++] = res.output1[ii];
 					}
 					res.output1[tmp_i++] = ':';
@@ -390,7 +390,7 @@ struct Topograph {
 		}
 
 
-		
+
 
 		res.cycle = refer_unit.cycle;
 		if (!strcmp(res.instr_name, "SADDA") || !strcmp(res.instr_name, "SSUBA")) {
@@ -415,7 +415,7 @@ struct Topograph {
 
 
 	// function below are defined in 'Topo_relative.h'
-	void reschedule(FILE *fp);
+	void reschedule(FILE* fp);
 	void push_to_cd_buff(Instr* x);
 	void fresh_cd_buff();
 	void build_read_reg_dependency(Instr* x, char* input);

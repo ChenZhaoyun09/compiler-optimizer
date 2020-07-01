@@ -68,7 +68,7 @@ static int sq_max_len = 0;
 static pair<int, int> find_fit(pair<int, int> pr, int start, int cycle, int read_cycle, int write_cycle) {
 	//make sure start >= 0
 	if (start < 0) start = 0;
-	
+
 	int best_fit = 0x3f3f3f3f, no_func;
 	int i, j, k;
 	bool flag;
@@ -197,11 +197,11 @@ static void output_reschedule_result(FILE* fp) {
 						prefix[ii] = x->input1[ii];
 					prefix[ii] = '\0';
 					char reg[8];
-					strncpy(reg, x->input1+ii, flag-ii);
+					strncpy(reg, x->input1 + ii, flag - ii);
 					reg[flag - ii] = '\0';
 					int reg_num = atoi(reg);
 					fprintf(fp, "\t");
-					for (ii = len-1; ii >= 0; ii--) {
+					for (ii = len - 1; ii >= 0; ii--) {
 						fprintf(fp, "%s%d", prefix, reg_num + ii);
 						if (ii != 0) fprintf(fp, ":");
 					}
@@ -228,7 +228,7 @@ static void output_reschedule_result(FILE* fp) {
 						if (ii != 0) fprintf(fp, ":");
 					}
 				}
-			}			
+			}
 			if (x->input3[0] != '\0')
 			{
 				int flag = findchar(x->input3, ':');
@@ -292,7 +292,7 @@ void Topograph::reschedule(FILE* fp) {
 		x = zero_indeg_instr.top();
 		zero_indeg_instr.pop();
 
-		
+
 		// if this instruction is SNOP
 		if (!strcmp(x->instr_name, "SNOP"))
 			continue;

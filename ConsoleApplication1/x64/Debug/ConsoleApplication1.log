@@ -1,0 +1,24 @@
+﻿  optimizer.cpp
+D:\optimizer\ConsoleApplication1\analyser.h(13,42): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\analyser.h(233,1): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\schedule.h(137,35): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\schedule.h(286,6): warning C4101: “pos”: 未引用的局部变量
+D:\optimizer\ConsoleApplication1\schedule.h(358,50): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\schedule.h(363,50): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\schedule.h(368,45): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(53,28): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(65,19): warning C4101: “pos”: 未引用的局部变量
+D:\optimizer\ConsoleApplication1\Topo_relative.h(65,13): warning C4101: “inum”: 未引用的局部变量
+D:\optimizer\ConsoleApplication1\Topo_relative.h(65,6): warning C4101: “i”: 未引用的局部变量
+D:\optimizer\ConsoleApplication1\Topo_relative.h(65,9): warning C4101: “ii”: 未引用的局部变量
+D:\optimizer\ConsoleApplication1\Topo_relative.h(147,30): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(258,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(290,25): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(367,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(404,17): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(406,32): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(549,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\Topo_relative.h(550,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\analyser.h(213): warning C4715: “sentence_type”: 不是所有的控件路径都返回值
+D:\optimizer\ConsoleApplication1\analyser.h(92): warning C4715: “Refer_table::get_refer_unit”: 不是所有的控件路径都返回值
+  ConsoleApplication1.vcxproj -> D:\optimizer\x64\Debug\ConsoleApplication1.exe

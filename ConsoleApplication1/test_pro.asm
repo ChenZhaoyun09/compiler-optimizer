@@ -250,4 +250,3 @@ M7002_expsp_v2:
 		SNOP		3
 		SWAIT
 .size M7002_expsp_v, .-M7002_expsp_v
-		
