@@ -12,14 +12,14 @@ D:\optimizer\ConsoleApplication1\Topo_relative.h(65,13): warning C4101: “inum�
 D:\optimizer\ConsoleApplication1\Topo_relative.h(65,6): warning C4101: “i”: 未引用的局部变量
 D:\optimizer\ConsoleApplication1\Topo_relative.h(65,9): warning C4101: “ii”: 未引用的局部变量
 D:\optimizer\ConsoleApplication1\Topo_relative.h(156,20): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\Topo_relative.h(187,21): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\Topo_relative.h(254,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(363,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(400,17): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(402,32): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
-D:\optimizer\ConsoleApplication1\Topo_relative.h(459,18): warning C4018: “<”: 有符号/无符号不匹配
-D:\optimizer\ConsoleApplication1\Topo_relative.h(527,1): warning C4010: 单行注释包含行继续符
-D:\optimizer\ConsoleApplication1\Topo_relative.h(528,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\Topo_relative.h(189,21): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\Topo_relative.h(258,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(367,34): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(404,17): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(406,32): warning C4244: “=”: 从“__int64”转换到“int”，可能丢失数据
+D:\optimizer\ConsoleApplication1\Topo_relative.h(481,18): warning C4018: “<”: 有符号/无符号不匹配
+D:\optimizer\ConsoleApplication1\Topo_relative.h(549,1): warning C4010: 单行注释包含行继续符
+D:\optimizer\ConsoleApplication1\Topo_relative.h(550,1): warning C4010: 单行注释包含行继续符
 D:\optimizer\ConsoleApplication1\analyser.h(213): warning C4715: “sentence_type”: 不是所有的控件路径都返回值
 D:\optimizer\ConsoleApplication1\analyser.h(92): warning C4715: “Refer_table::get_refer_unit”: 不是所有的控件路径都返回值
   ConsoleApplication1.vcxproj -> D:\optimizer\Debug\ConsoleApplication1.exe

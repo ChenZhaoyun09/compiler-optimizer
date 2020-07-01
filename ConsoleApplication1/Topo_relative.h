@@ -17,7 +17,7 @@ inline int peek(FILE* fp) {
 inline long long stoll(char* str) {
 	if (str[0] != '0') return atoll(str);
 	else {
-	long long res;		
+		long long res;
 		sscanf(str, "%llx", &res);
 		return res;
 	}
@@ -38,7 +38,7 @@ void add_num_after_str(char* destination, char* source, int num) {
 }
 
 bool reg_equal(char* str_conj, char* str) {
-	if (findchar(str_conj, ':') ==-1 || str_conj[0]=='\0') return !strcmp(str_conj, str);
+	if (findchar(str_conj, ':') == -1 || str_conj[0] == '\0') return !strcmp(str_conj, str);
 	char alpha[8], cnum[8];
 	int inum;
 	int i, ii;
@@ -125,10 +125,10 @@ void Topograph::push_to_cd_buff(Instr* x) {
 	}
 
 	//output1
-	if (x->output1[0]=='*') {
+	if (x->output1[0] == '*') {
 		build_read_mem_dependency(x, x->output1, 0);
 	}
-	
+
 	if (!strcmp(x->output1, "")) return;
 	cd_Instr cdi(x, this->Timer + x->cycle);
 	this->cd_buff.push(cdi);
@@ -147,12 +147,12 @@ void Topograph::fresh_cd_buff() {
 			len = strlen(tmp->output1);
 			if (tmp->output1[len - 2] != ':') {
 				reg_info res(tmp->output1);
-				
+
 				Instr* ptr = this->reg_written[res];
 				if (ptr != NULL) {
 					ptr->chl.push_back(make_pair(tmp, ptr->cycle - tmp->cycle + tmp->w_cycle));
 					tmp->indeg++;
-					
+
 					for (i = 0; i < (ptr->chl).size(); i++) {
 						Instr* child = (ptr->chl[i]).first;
 						if (reg_equal(child->cond, tmp->output1) || reg_equal(child->input1, tmp->output1) || reg_equal(child->input2, tmp->output1) || reg_equal(child->input3, tmp->output1)) {
@@ -164,6 +164,8 @@ void Topograph::fresh_cd_buff() {
 					}
 				}
 				this->reg_written[res] = tmp;
+				if (tmp->output1[0] == 'A')
+					this->up_AR_change[res] = tmp;
 			}
 
 			else {
@@ -178,12 +180,12 @@ void Topograph::fresh_cd_buff() {
 
 				reg_info res;
 				for (i = tmp->output1[len - 1] - '0'; i; i--) {
-					add_num_after_str(res.name, alpha, inum+i-1);
+					add_num_after_str(res.name, alpha, inum + i - 1);
 					Instr* ptr = this->reg_written[res];
 					if (ptr != NULL) {
 						ptr->chl.push_back(make_pair(tmp, ptr->cycle - tmp->cycle + tmp->w_cycle));
 						tmp->indeg++;
-					
+
 						for (i = 0; i < (ptr->chl).size(); i++) {
 							Instr* child = (ptr->chl[i]).first;
 							if (reg_equal(child->cond, tmp->output1) || reg_equal(child->input1, tmp->output1) || reg_equal(child->input2, tmp->output1) || reg_equal(child->input3, tmp->output1)) {
@@ -195,6 +197,8 @@ void Topograph::fresh_cd_buff() {
 						}
 					}
 					this->reg_written[res] = tmp;
+					if (alpha[0] == 'A')
+						this->up_AR_change[res] = tmp;
 				}
 			}
 		}
@@ -408,6 +412,21 @@ void Topograph::build_read_mem_dependency(Instr* x, char* input, int load_store)
 	if (self_change == true)
 		this->reg_offset[reg_info(AR)] = offset;
 
+	// all mem_read or mem_write Instr should be placed after last AR change Instr
+	reg_info resA(AR);
+	Instr* last_AR_change = this->up_AR_change[AR];
+	if (last_AR_change != NULL) {
+		if (load_store) {
+			last_AR_change->chl.push_back(make_pair(x, last_AR_change->cycle));
+			x->indeg++;
+		}
+		else {
+			last_AR_change->chl.push_back(make_pair(x, last_AR_change->cycle - x->cycle + x->w_cycle));
+			x->indeg++;
+		}
+	}
+
+
 	if (!isdigit(OR[0])) {
 		reg_info resO(OR);
 		//this->reg_read[res] = x;
@@ -428,9 +447,12 @@ void Topograph::build_read_mem_dependency(Instr* x, char* input, int load_store)
 			ptr->chl.push_back(make_pair(x, ptr->cycle));
 			x->indeg++;
 		}
+
+		if (self_change)
+			this->up_AR_change[resA] = x;
 	}
 
-	reg_info resA(AR);
+	//reg_info resA(AR);
 	if (self_change == false) {
 		//this->reg_read[res] = x;
 		Instr* ptr = this->reg_written[resA];
@@ -476,8 +498,8 @@ void Topograph::build_read_mem_dependency(Instr* x, char* input, int load_store)
 			if (it->second != NULL && mem_rely(it->first, res)) {
 				((it->second)->chl).push_back(make_pair(x, it->second->cycle));
 				x->indeg++;
-				it++;
-				//(this->mem_written).erase(it++);
+				//it++;
+				(this->mem_written).erase(it++);
 			}
 			else {
 				it++;
@@ -487,7 +509,7 @@ void Topograph::build_read_mem_dependency(Instr* x, char* input, int load_store)
 }
 
 void process_file(char* destination, char* source, void (Topograph::* Func)(FILE* fp)) {
-	FILE *fpin, *fpout;
+	FILE* fpin, * fpout;
 	fpin = fopen(source, "r");
 	fpout = fopen(destination, "w");
 
@@ -496,7 +518,7 @@ void process_file(char* destination, char* source, void (Topograph::* Func)(FILE
 	int para_flag;
 	Instr* instr_x;
 
-	new_topo:
+new_topo:
 	{
 		Topograph topo;
 		while (peek(fpin) != EOF) {
@@ -537,11 +559,11 @@ void process_file(char* destination, char* source, void (Topograph::* Func)(FILE
 			//	if (x == NULL) continue;
 			//	printf("%s", x->instr_str);
 			//}puts("");
-		
+
 		}
 		(topo.*Func)(fpout);
 	}
-	
+
 
 
 	fclose(fpin);
